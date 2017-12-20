@@ -4,6 +4,18 @@ import * as firebase from 'firebase';
 import AppBar from 'material-ui/AppBar';
 import Avatar from 'material-ui/Avatar';
 import Drawer from 'material-ui/Drawer';
+import Calendar from 'react-calendar-pane';
+import './UserPage.css'
+
+
+const customDayRenderer = ({ handleClick, date }) => {
+  return (
+    <span onClick={() => handleClick(date)} >
+      <span className="number">{date.format('D')}</span><br/>
+      醤油ラーメン 大盛り
+    </span>
+  );
+};
 
 class UserPage extends Component {
   constructor(props) {
@@ -14,6 +26,10 @@ class UserPage extends Component {
   handleToggle = () => this.setState({open: !this.state.open});
 
   handleClose = () => this.setState({open: false});
+
+  onSelect(date, previousDate, currentMonth) {
+    alert(date);
+  }
 
   render() {
     const user = firebase.auth().currentUser;
@@ -38,6 +54,11 @@ class UserPage extends Component {
             </div>
             <SignOutButton></SignOutButton>
           </Drawer>
+
+          <Calendar
+            onSelect={this.onSelect}
+            dayRenderer={customDayRenderer}
+          />
 
         </div>
     )
