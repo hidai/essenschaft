@@ -6,24 +6,24 @@ import UserPage from './UserPage'
 import * as firebase from 'firebase';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-const PublicRoute = ({component: Component, ...rest}) => {
+const PublicRoute = ({component: Component, authorized, failedPath, ...rest}) => {
   return (
     <Route
       {...rest}
-      render={(props) => firebase.auth().currentUser != null
-        ? <Redirect to={{pathname: '/user', state: {from: props.location}}} />
+      render={(props) => authorized
+        ? <Redirect to={{pathname: failedPath, state: {from: props.location}}} />
         : <Component {...props} />}
     />
   )
 }
 
-const PrivateRoute = ({component: Component, ...rest}) => {
+const PrivateRoute = ({component: Component, authorized, failedPath, ...rest}) => {
   return (
     <Route
       {...rest}
-      render={(props) => firebase.auth().currentUser != null
+      render={(props) => authorized
         ? <Component {...props} />
-        : <Redirect to={{pathname: '/', state: {from: props.location}}} />}
+        : <Redirect to={{pathname: failedPath, state: {from: props.location}}} />}
     />
   )
 }
@@ -33,14 +33,24 @@ type Props = {
 };
 
 type State = {
+  user: ?Object,
 };
 
 class AppRouterBase extends Component<Props, State> {
   state = {
+    user: null
+  }
+
+  constructor() {
+    super();
+    (this: any).isAuthorized = this.isAuthorized.bind(this);
   }
 
   componentDidMount() {
     firebase.auth().onAuthStateChanged((user) => {
+      this.setState({
+        user: user
+      });
       if (user != null) {
         console.log('Signed-in: ' + JSON.stringify(user));
         this.props.history.push("/user");
@@ -49,6 +59,10 @@ class AppRouterBase extends Component<Props, State> {
         this.props.history.push("/");
       }
     });
+  }
+
+  isAuthorized() {
+    return this.state.user != null;
   }
 
   render() {
@@ -60,9 +74,18 @@ class AppRouterBase extends Component<Props, State> {
           | <Link to="/user">User</Link> |
         </div>
         <hr/>
-        <Route path='/menu' component={MenuPage} />
-        <PublicRoute exact path="/" component={HomePage} />
-        <PrivateRoute path='/user' component={UserPage} />
+        <Route path="/menu" component={MenuPage} />
+        <PublicRoute
+          exact
+          path="/"
+          failedPath="/user"
+          component={HomePage}
+          authorized={this.isAuthorized()} />
+        <PrivateRoute
+          path="/user"
+          failedPath="/"
+          component={UserPage}
+          authorized={this.isAuthorized()} />
       </div>
     )
   }
