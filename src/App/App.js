@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Redirect, Link, withRouter } from 'react-router-dom'
 import HomePage from './HomePage'
+import MenuPage from './MenuPage'
 import UserPage from './UserPage'
 import * as firebase from 'firebase';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -53,10 +54,13 @@ class App extends Component {
         <BrowserRouter>
           <div>
             <div>
-              | <Link to="/">Home</Link> | <Link to="/user">UserPage</Link> |
+              | <Link to="/">Home</Link>
+              | <Link to="/menu">Menu</Link>
+              | <Link to="/user">User</Link> |
             </div>
             <hr/>
             <AuthEventRouteWithRouter />
+            <Route path='/menu' component={MenuPage} />
             <PublicRoute exact path="/" component={HomePage} />
             <PrivateRoute path='/user' component={UserPage} />
           </div>
