@@ -1,32 +1,12 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route, Redirect, Link, withRouter } from 'react-router-dom'
+import { BrowserRouter, Route, Link, withRouter } from 'react-router-dom'
 import HomePage from './HomePage'
 import MenuPage from './MenuPage'
 import UserPage from './UserPage'
+import PrivateRoute from '../route/PrivateRoute'
+import PublicRoute from '../route/PublicRoute'
 import * as firebase from 'firebase';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-
-const PublicRoute = ({component: Component, authorized, failedPath, ...rest}) => {
-  return (
-    <Route
-      {...rest}
-      render={(props) => authorized
-        ? <Redirect to={{pathname: failedPath, state: {from: props.location}}} />
-        : <Component {...props} />}
-    />
-  )
-}
-
-const PrivateRoute = ({component: Component, authorized, failedPath, ...rest}) => {
-  return (
-    <Route
-      {...rest}
-      render={(props) => authorized
-        ? <Component {...props} />
-        : <Redirect to={{pathname: failedPath, state: {from: props.location}}} />}
-    />
-  )
-}
 
 type Props = {
   history: Object,
