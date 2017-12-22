@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Redirect, Link, withRouter } from 'react-router-dom'
 import HomePage from './HomePage'
@@ -29,14 +28,20 @@ const PrivateRoute = ({component: Component, ...rest}) => {
   )
 }
 
-type AuthEventRouteProps = {
-  history: string[],
+type Props = {
+  history: Object,
 };
 
-class AuthEventRoute extends Component<AuthEventRouteProps> {
-  componentWillMount() {
+type State = {
+};
+
+class AppRouterBase extends Component<Props, State> {
+  state = {
+  }
+
+  componentDidMount() {
     firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
+      if (user != null) {
         console.log('Signed-in: ' + JSON.stringify(user));
         this.props.history.push("/user");
       } else {
@@ -45,33 +50,35 @@ class AuthEventRoute extends Component<AuthEventRouteProps> {
       }
     });
   }
+
   render() {
-    return null;
+    return (
+      <div>
+        <div>
+          | <Link to="/">Home</Link>
+          | <Link to="/menu">Menu</Link>
+          | <Link to="/user">User</Link> |
+        </div>
+        <hr/>
+        <Route path='/menu' component={MenuPage} />
+        <PublicRoute exact path="/" component={HomePage} />
+        <PrivateRoute path='/user' component={UserPage} />
+      </div>
+    )
   }
 }
 
-const AuthEventRouteWithRouter = withRouter(AuthEventRoute);
+const AppRouter = withRouter(AppRouterBase);
 
 class App extends Component<{}> {
   render() {
     return (
       <MuiThemeProvider>
         <BrowserRouter>
-          <div>
-            <div>
-              | <Link to="/">Home</Link>
-              | <Link to="/menu">Menu</Link>
-              | <Link to="/user">User</Link> |
-            </div>
-            <hr/>
-            <AuthEventRouteWithRouter />
-            <Route path='/menu' component={MenuPage} />
-            <PublicRoute exact path="/" component={HomePage} />
-            <PrivateRoute path='/user' component={UserPage} />
-          </div>
+          <AppRouter />
         </BrowserRouter>
       </MuiThemeProvider>
-    )
+    );
   }
 }
 
