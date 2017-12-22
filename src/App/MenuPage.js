@@ -1,15 +1,20 @@
+// @flow
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
 import { GridList, GridTile } from 'material-ui/GridList';
 import 'firebase/firestore';
 
-class MenuPage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      menuList: []
-    };
-  }
+type Props = {
+};
+
+type State = {
+  menuList: Array<Object>,
+};
+
+class MenuPage extends Component<Props, State> {
+  state = {
+    menuList: []
+  };
 
   componentDidMount() {
     const db = firebase.firestore();

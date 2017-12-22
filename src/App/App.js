@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Redirect, Link, withRouter } from 'react-router-dom'
 import HomePage from './HomePage'
@@ -28,7 +29,11 @@ const PrivateRoute = ({component: Component, ...rest}) => {
   )
 }
 
-class AuthEventRoute extends Component {
+type AuthEventRouteProps = {
+  history: string[],
+};
+
+class AuthEventRoute extends Component<AuthEventRouteProps> {
   componentWillMount() {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
@@ -47,7 +52,7 @@ class AuthEventRoute extends Component {
 
 const AuthEventRouteWithRouter = withRouter(AuthEventRoute);
 
-class App extends Component {
+class App extends Component<{}> {
   render() {
     return (
       <MuiThemeProvider>

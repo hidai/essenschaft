@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react';
 import SignOutButton from '../Auth/SignOutButton'
 import * as firebase from 'firebase';
@@ -17,17 +18,23 @@ const customDayRenderer = ({ handleClick, date }) => {
   );
 };
 
-class UserPage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {open: false};
-  }
+type Props = {
+};
+
+type State = {
+  open: boolean,
+};
+
+class UserPage extends Component<Props, State> {
+  state = {
+    open: false
+  };
 
   handleToggle = () => this.setState({open: !this.state.open});
 
   handleClose = () => this.setState({open: false});
 
-  onSelect(date, previousDate, currentMonth) {
+  onSelect(date: Date, previousDate: Date, currentMonth: number) {
     alert(date);
   }
 

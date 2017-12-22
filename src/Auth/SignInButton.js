@@ -1,9 +1,10 @@
+// @flow
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
 import GoogleLogo from './google_g_logo.svg'
 import { RaisedButton } from "material-ui";
 
-export default class SignInButton extends Component {
+export default class SignInButton extends Component<{}> {
   handleGoogleLogin() {
     firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider())
       .then((result) => {

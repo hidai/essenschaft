@@ -1,8 +1,9 @@
+// @flow
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
 import { RaisedButton } from "material-ui";
 
-export default class SignOutButton extends Component {
+export default class SignOutButton extends Component<{}> {
   signout() {
     firebase.auth().signOut().then(
         () => {
