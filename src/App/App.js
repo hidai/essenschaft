@@ -1,12 +1,14 @@
 // @flow
 import React, { Component } from 'react';
-import { BrowserRouter, Route, Link, withRouter } from 'react-router-dom'
+import { BrowserRouter, Link, withRouter } from 'react-router-dom'
 import HomePage from './HomePage'
 import MenuPage from './MenuPage'
 import UserPage from './UserPage'
 import PrivateRoute from '../route/PrivateRoute'
+import PropsRoute from '../route/PropsRoute'
 import PublicRoute from '../route/PublicRoute'
 import * as firebase from 'firebase';
+import 'firebase/firestore';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 type Props = {
@@ -15,11 +17,13 @@ type Props = {
 
 type State = {
   user: ?Object,
+  menuList: Array<Object>,
 };
 
 class AppRouterBase extends Component<Props, State> {
   state = {
-    user: null
+    user: null,
+    menuList: [],
   }
 
   constructor() {
@@ -40,6 +44,20 @@ class AppRouterBase extends Component<Props, State> {
         this.props.history.push("/");
       }
     });
+
+    firebase.firestore().collection("menu").get().then((response) => {
+      let menuList = [];
+      response.forEach((doc) => {
+        menuList.push({
+          id:     doc.id,
+          name:   doc.data().name,
+          imgurl: doc.data().imgurl
+        });
+      });
+      this.setState({
+        menuList: menuList
+      });
+    });
   }
 
   isAuthorized() {
@@ -55,7 +73,10 @@ class AppRouterBase extends Component<Props, State> {
           | <Link to="/user">User</Link> |
         </div>
         <hr/>
-        <Route path="/menu" component={MenuPage} />
+        <PropsRoute
+          path="/menu"
+          component={MenuPage}
+          menuList={this.state.menuList} />
         <PublicRoute
           exact
           path="/"

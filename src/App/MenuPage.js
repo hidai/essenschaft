@@ -1,41 +1,15 @@
 // @flow
 import React, { Component } from 'react';
-import * as firebase from 'firebase';
 import { GridList, GridTile } from 'material-ui/GridList';
-import 'firebase/firestore';
 
 type Props = {
-};
-
-type State = {
   menuList: Array<Object>,
 };
 
-class MenuPage extends Component<Props, State> {
-  state = {
-    menuList: []
-  };
-
-  componentDidMount() {
-    const db = firebase.firestore();
-    db.collection("menu").get().then((querySnapshot) => {
-      let menuList = [];
-      querySnapshot.forEach((doc) => {
-        menuList.push({
-          id:     doc.id,
-          name:   doc.data().name,
-          imgurl: doc.data().imgurl
-        });
-      });
-      this.setState({
-        menuList: menuList
-      });
-    });
-  }
-
+class MenuPage extends Component<Props> {
   render() {
     let list = [];
-    this.state.menuList.forEach((menu) => {
+    this.props.menuList.forEach((menu) => {
       let elem = (
           <GridTile
             key={menu.id}
