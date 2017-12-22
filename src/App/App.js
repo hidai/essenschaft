@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Link, withRouter } from 'react-router-dom'
 import HomePage from './HomePage'
