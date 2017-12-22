@@ -66,7 +66,8 @@ class AppRouterBase extends Component<Props, State> {
           path="/user"
           failedPath="/"
           component={UserPage}
-          authorized={this.isAuthorized()} />
+          authorized={this.isAuthorized()}
+          user={this.state.user} />
       </div>
     )
   }

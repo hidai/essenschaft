@@ -1,7 +1,6 @@
 // @flow
 import React, { Component } from 'react';
 import SignOutButton from '../Auth/SignOutButton'
-import * as firebase from 'firebase';
 import AppBar from 'material-ui/AppBar';
 import Avatar from 'material-ui/Avatar';
 import Drawer from 'material-ui/Drawer';
@@ -19,6 +18,7 @@ const customDayRenderer = ({ handleClick, date }) => {
 };
 
 type Props = {
+  user: ?Object,
 };
 
 type State = {
@@ -39,7 +39,10 @@ class UserPage extends Component<Props, State> {
   }
 
   render() {
-    const user = firebase.auth().currentUser;
+    const user = this.props.user;
+    if (user == null) {
+      return <span>ERROR</span>;
+    }
     return (
         <div>
           <AppBar title="Lunch order"
