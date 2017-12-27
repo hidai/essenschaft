@@ -10,6 +10,7 @@ import PublicRoute from '../route/PublicRoute'
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import type { MenuType } from './MenuType';
 
 type Props = {
   history: Object,
@@ -17,7 +18,7 @@ type Props = {
 
 type State = {
   user: ?Object,
-  menuList: Array<Object>,
+  menuList: Array<MenuType>,
 };
 
 class AppRouterBase extends Component<Props, State> {
@@ -46,12 +47,14 @@ class AppRouterBase extends Component<Props, State> {
     });
 
     const updateMenuList = (response) => {
-      let menuList = [];
+      let menuList: Array<MenuType> = [];
       response.forEach((doc) => {
         menuList.push({
-          id:     doc.id,
-          name:   doc.data().name,
-          imgurl: doc.data().imgurl
+          id:         doc.id,
+          name:       doc.data().name,
+          imgurl:     doc.data().imgurl,
+          lunchOnly:  doc.data().lunchOnly,
+          lastUpdate: doc.data().lastUpdate,
         });
       });
       this.setState({
