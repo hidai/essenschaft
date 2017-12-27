@@ -11,6 +11,7 @@ import 'firebase/firestore';
 import type { MenuType } from './MenuType';
 
 type Props = {
+  fabStyle: Object,
 };
 
 type State = {
@@ -80,11 +81,6 @@ class AddMenuDialog extends Component<Props, State> {
         onClick={this.onAddButtonClicked}
       />,
     ];
-    const fabStyle = {
-      position: 'fixed',
-      right: '1em',
-      bottom: '1em',
-    };
     return (
         <div>
           <Dialog
@@ -106,7 +102,8 @@ class AddMenuDialog extends Component<Props, State> {
               onCheck={this.updateLunchOnlyCheck} />
           </Dialog>
           <FloatingActionButton
-            style={fabStyle}
+            style={this.props.fabStyle}
+            secondary={true}
             onClick={this.handleOpen}>
             <ContentAdd />
           </FloatingActionButton>
