@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
 import GoogleLogo from './google_g_logo.svg'
-import { RaisedButton } from "material-ui";
+import Button from "material-ui/Button";
 
 export default class SignInButton extends Component<{}> {
   handleGoogleLogin() {
@@ -26,11 +26,13 @@ export default class SignInButton extends Component<{}> {
         marginRight: '24px'
       };
       return (
-          <RaisedButton
-            icon={<img src={GoogleLogo} style={googleLogoStyle} alt="Google" />}
-            label="Sign in with Google"
-            onClick={this.handleGoogleLogin}
-          />
+          <Button
+            raised
+            style={{background: "white"}}
+            onClick={this.handleGoogleLogin}>
+            <img src={GoogleLogo} style={googleLogoStyle} alt="Google" />
+            Sign in with Google
+          </Button>
       );
     }
   }

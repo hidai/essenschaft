@@ -9,7 +9,7 @@ import PropsRoute from '../route/PropsRoute'
 import PublicRoute from '../route/PublicRoute'
 import * as firebase from 'firebase';
 import 'firebase/firestore';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 import type { MenuType } from './MenuType';
 
 type Props = {
@@ -104,7 +104,7 @@ const AppRouter = withRouter(AppRouterBase);
 class App extends Component<{}> {
   render() {
     return (
-      <MuiThemeProvider>
+      <MuiThemeProvider theme={createMuiTheme()}>
         <BrowserRouter>
           <AppRouter />
         </BrowserRouter>

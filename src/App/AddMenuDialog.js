@@ -1,9 +1,13 @@
 // @flow
 import React, { Component } from 'react';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
+import Button from 'material-ui/Button';
+import IconAdd from 'material-ui-icons/Add';
+import Dialog, {
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from 'material-ui/Dialog';
+import { FormControlLabel } from 'material-ui/Form';
 import TextField from 'material-ui/TextField';
 import Checkbox from 'material-ui/Checkbox';
 import * as firebase from 'firebase';
@@ -37,15 +41,18 @@ class AddMenuDialog extends Component<Props, State> {
     this.setState({open: false});
   };
 
-  updateName = (o: Object, value: string) => {
+  updateName = (event: Object) => {
+    const value: string = event.target.value;
     this.setState({name: value});
   };
 
-  updateImgurl = (o: Object, value: string) => {
+  updateImgurl = (event: Object) => {
+    const value: string = event.target.value;
     this.setState({imgurl: value});
   };
 
-  updateLunchOnlyCheck = (o: Object, value: boolean) => {
+  updateLunchOnlyCheck = (event: Object) => {
+    const value: boolean = event.target.checked;
     this.setState({lunchOnly: value});
   };
 
@@ -53,10 +60,9 @@ class AddMenuDialog extends Component<Props, State> {
     let doc: MenuType = {
       name: this.state.name,
       imgurl: this.state.imgurl,
+      lunchOnly: this.state.lunchOnly,
+      lastUpdate: new Date(),
     };
-    if (this.state.lunchOnly) {
-      doc.lunchOnly = true;
-    }
     firebase.firestore().collection('menu').add(doc)
       .then(function(docRef) {
         console.log('Document written with ID: ', docRef.id);
@@ -68,45 +74,60 @@ class AddMenuDialog extends Component<Props, State> {
   };
 
   render() {
-    const actions = [
-      <FlatButton
-        label="Cancel"
-        primary={true}
-        onClick={this.handleClose}
-      />,
-      <FlatButton
-        label="Add"
-        primary={true}
-        disabled={!this.state.name}
-        onClick={this.onAddButtonClicked}
-      />,
-    ];
     return (
         <div>
           <Dialog
-            title="Add new menu item"
-            actions={actions}
-            modal={true}
             open={this.state.open}
           >
-            <TextField hintText="Menu Name"
-              value={this.state.name}
-              onChange={this.updateName}
-            />
-            <TextField hintText="URL of the menu image"
-              value={this.state.imgurl}
-              onChange={this.updateImgurl}
-            />
-            <Checkbox label="Lunch Only"
-              value={this.state.lunchOnly}
-              onCheck={this.updateLunchOnlyCheck} />
+            <DialogTitle>Add new menu item</DialogTitle>
+            <DialogContent>
+              <TextField
+                label="Menu Name"
+                value={this.state.name}
+                InputProps={{
+                  onChange: this.updateName
+                }}
+                fullWidth
+              />
+              <TextField
+                label="URL of the menu image"
+                value={this.state.imgurl}
+                InputProps={{
+                  onChange: this.updateImgurl
+                }}
+                fullWidth
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={this.state.lunchOnly}
+                    onChange={this.updateLunchOnlyCheck}
+                  />
+                }
+                label="Lunch Only"
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button
+                onClick={this.handleClose}
+                color="primary">
+                Cancel
+              </Button>
+              <Button
+                onClick={this.onAddButtonClicked}
+                disabled={!this.state.name}
+                color="primary">
+                Add
+              </Button>
+            </DialogActions>
           </Dialog>
-          <FloatingActionButton
+          <Button
+            fab
+            color="accent"
             style={this.props.fabStyle}
-            secondary={true}
             onClick={this.handleOpen}>
-            <ContentAdd />
-          </FloatingActionButton>
+            <IconAdd />
+          </Button>
         </div>
     );
   }

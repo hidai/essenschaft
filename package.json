@@ -4,7 +4,8 @@
   "private": true,
   "dependencies": {
     "firebase": "^4.8.1",
-    "material-ui": "^0.20.0",
+    "material-ui": "^1.0.0-beta.25",
+    "material-ui-icons": "^1.0.0-beta.17",
     "react": "^16.2.0",
     "react-calendar-pane": "^1.0.3",
     "react-dom": "^16.2.0",

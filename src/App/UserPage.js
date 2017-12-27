@@ -1,7 +1,12 @@
 // @flow
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom'
 import SignOutButton from '../Auth/SignOutButton'
 import AppBar from 'material-ui/AppBar';
+import Toolbar from 'material-ui/Toolbar';
+import Typography from 'material-ui/Typography';
+import IconButton from 'material-ui/IconButton';
+import MenuIcon from 'material-ui-icons/Menu';
 import Avatar from 'material-ui/Avatar';
 import Drawer from 'material-ui/Drawer';
 import Calendar from 'react-calendar-pane';
@@ -30,9 +35,13 @@ class UserPage extends Component<Props, State> {
     open: false
   };
 
-  handleToggle = () => this.setState({open: !this.state.open});
-
-  handleClose = () => this.setState({open: false});
+  handleToggle = () => {
+    this.setState((prevState: State) => {
+      return {
+        open: !prevState.open,
+      }
+    });
+  };
 
   onSelect(date: Date, previousDate: Date, currentMonth: number) {
     alert(date);
@@ -45,13 +54,23 @@ class UserPage extends Component<Props, State> {
     }
     return (
         <div>
-          <AppBar title="Lunch order"
-            onLeftIconButtonClick={this.handleToggle} />
+          <AppBar>
+            <Toolbar>
+              <IconButton aria-label="Menu" onClick={this.handleToggle}>
+                <MenuIcon />
+              </IconButton>
+              <Typography type="title" color="inherit">
+                Lunch order
+              </Typography>
+            </Toolbar>
+          </AppBar>
           <Drawer
-            docked={false}
-            width={200}
+            type="temporary"
             open={this.state.open}
-            onRequestChange={(open) => this.setState({open})}
+            onClose={this.handleToggle}
+            ModalProps={{
+              keepMounted: true, // Better open performance on mobile.
+            }}
           >
             <div>
               <Avatar src={user.photoURL} />
@@ -63,6 +82,9 @@ class UserPage extends Component<Props, State> {
               {user.email}
             </div>
             <SignOutButton></SignOutButton>
+            <Link to="/">Home</Link>
+            <Link to="/menu">Menu</Link>
+            <Link to="/user">User</Link>
           </Drawer>
 
           <Calendar

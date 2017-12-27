@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
-import { RaisedButton } from "material-ui";
+import Button from "material-ui/Button";
 
 export default class SignOutButton extends Component<{}> {
   signout() {
@@ -18,10 +18,9 @@ export default class SignOutButton extends Component<{}> {
     const signedIn = firebase.auth().currentUser != null;
     if (signedIn) {
       return (
-          <RaisedButton
-            label="Sign out"
-            onClick={this.signout}
-          />
+          <Button raised onClick={this.signout}>
+            Sign out
+          </Button>
       );
     } else {
       return null;

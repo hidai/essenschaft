@@ -1,11 +1,11 @@
 // @flow
 import React, { Component } from 'react';
-import { GridList, GridTile } from 'material-ui/GridList';
+import { GridList, GridListTile, GridListTileBar } from 'material-ui/GridList';
 import AddMenuDialog from './AddMenuDialog';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ActionZoomIn from 'material-ui/svg-icons/action/zoom-in';
-import ActionZoomOut from 'material-ui/svg-icons/action/zoom-out';
-import ContentSort from 'material-ui/svg-icons/content/sort';
+import Button from 'material-ui/Button';
+import IconZoomIn from 'material-ui-icons/ZoomIn';
+import IconZoomOut from 'material-ui-icons/ZoomOut';
+import IconSort from 'material-ui-icons/Sort';
 import type { MenuType } from './MenuType';
 
 type Props = {
@@ -82,12 +82,11 @@ class MenuPage extends Component<Props, State> {
     sortedMenuList.sort(this.getCompareFunc());
     sortedMenuList.forEach((menu) => {
       let elem = (
-          <GridTile
-            key={menu.id}
-            title={menu.name}
-          >
+          <GridListTile key={menu.id}>
             <img src={menu.imgurl} alt={menu.name}/>
-          </GridTile>
+            <GridListTileBar title={menu.name} subtitle="菱膳">
+            </GridListTileBar>
+          </GridListTile>
       );
       list.push(elem);
     });
@@ -112,25 +111,28 @@ class MenuPage extends Component<Props, State> {
 
           <div style={fabContainerStyle}>
             <AddMenuDialog fabStyle={fabStyle} />
-            <FloatingActionButton
+            <Button
+              fab
               mini={true}
               onClick={this.plusGridCols.bind(this, -1)}
               disabled={this.state.gridCols === 1}
               style={fabStyle}>
-              <ActionZoomIn />
-            </FloatingActionButton>
-            <FloatingActionButton
+              <IconZoomIn />
+            </Button>
+            <Button
+              fab
               mini={true}
               onClick={this.plusGridCols.bind(this, +1)}
               style={fabStyle}>
-              <ActionZoomOut />
-            </FloatingActionButton>
-            <FloatingActionButton
+              <IconZoomOut />
+            </Button>
+            <Button
+              fab
               mini={true}
               onClick={this.changeToNextSortOrder.bind(this)}
               style={fabStyle}>
-              <ContentSort />
-            </FloatingActionButton>
+              <IconSort />
+            </Button>
           </div>
         </div>
     )
