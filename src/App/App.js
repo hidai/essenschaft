@@ -45,7 +45,7 @@ class AppRouterBase extends Component<Props, State> {
       }
     });
 
-    firebase.firestore().collection("menu").get().then((response) => {
+    const updateMenuList = (response) => {
       let menuList = [];
       response.forEach((doc) => {
         menuList.push({
@@ -57,7 +57,9 @@ class AppRouterBase extends Component<Props, State> {
       this.setState({
         menuList: menuList
       });
-    });
+    };
+    firebase.firestore().collection("menu").get().then(updateMenuList);
+    firebase.firestore().collection("menu").onSnapshot(updateMenuList);
   }
 
   isAuthorized() {

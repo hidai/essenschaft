@@ -8,7 +8,7 @@ import TextField from 'material-ui/TextField';
 import Checkbox from 'material-ui/Checkbox';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
-import MenuType from './MenuType';
+import type { MenuType } from './MenuType';
 
 type Props = {
 };
