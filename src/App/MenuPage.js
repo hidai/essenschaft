@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import { GridList, GridTile } from 'material-ui/GridList';
+import AddMenuDialog from './AddMenuDialog';
 
 type Props = {
   menuList: Array<Object>,
@@ -20,11 +21,14 @@ class MenuPage extends Component<Props> {
       list.push(elem);
     });
     return (
-        <GridList>
-          {
-            list.length > 0 ? list : <span>Loading...</span>
-          }
-        </GridList>
+        <div>
+          <GridList>
+            {
+              list.length > 0 ? list : <span>Loading...</span>
+            }
+          </GridList>
+          <AddMenuDialog />
+        </div>
     )
   }
 }
