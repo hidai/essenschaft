@@ -6,6 +6,7 @@ import Dialog, {
   DialogActions,
   DialogContent,
   DialogTitle,
+  withMobileDialog,
 } from 'material-ui/Dialog';
 import { FormControlLabel } from 'material-ui/Form';
 import TextField from 'material-ui/TextField';
@@ -16,6 +17,7 @@ import type { MenuType } from './MenuType';
 
 type Props = {
   fabStyle: Object,
+  fullScreen: boolean,  // from withMobileDialog
 };
 
 type State = {
@@ -77,6 +79,7 @@ class AddMenuDialog extends Component<Props, State> {
     return (
         <div>
           <Dialog
+            fullScreen={this.props.fullScreen}
             open={this.state.open}
           >
             <DialogTitle>Add new menu item</DialogTitle>
@@ -133,4 +136,4 @@ class AddMenuDialog extends Component<Props, State> {
   }
 }
 
-export default AddMenuDialog;
+export default withMobileDialog()(AddMenuDialog);
