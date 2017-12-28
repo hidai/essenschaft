@@ -1,11 +1,9 @@
 // @flow
 import React, { Component } from 'react';
-import { BrowserRouter, Link, withRouter } from 'react-router-dom'
+import { BrowserRouter, withRouter } from 'react-router-dom'
 import HomePage from './HomePage'
-import MenuPage from './MenuPage'
 import UserPage from './UserPage'
 import PrivateRoute from '../route/PrivateRoute'
-import PropsRoute from '../route/PropsRoute'
 import PublicRoute from '../route/PublicRoute'
 import * as firebase from 'firebase';
 import 'firebase/firestore';
@@ -72,28 +70,21 @@ class AppRouterBase extends Component<Props, State> {
   render() {
     return (
       <div>
-        <div>
-          | <Link to="/">Home</Link>
-          | <Link to="/menu">Menu</Link>
-          | <Link to="/user">User</Link> |
-        </div>
-        <hr/>
-        <PropsRoute
-          path="/menu"
-          component={MenuPage}
-          menuList={this.state.menuList} />
         <PublicRoute
           exact
           path="/"
           failedPath="/user"
           component={HomePage}
-          authorized={this.isAuthorized()} />
+          authorized={this.isAuthorized()}
+        />
         <PrivateRoute
           path="/user"
           failedPath="/"
           component={UserPage}
           authorized={this.isAuthorized()}
-          user={this.state.user} />
+          user={this.state.user}
+          menuList={this.state.menuList}
+        />
       </div>
     )
   }

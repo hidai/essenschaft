@@ -1,6 +1,8 @@
 // @flow
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom'
+import { Switch, Link } from 'react-router-dom'
+import PropsRoute from '../route/PropsRoute'
+import type { MenuType } from './MenuType';
 import SignOutButton from '../Auth/SignOutButton'
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
@@ -9,21 +11,14 @@ import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui-icons/Menu';
 import Avatar from 'material-ui/Avatar';
 import Drawer from 'material-ui/Drawer';
-import Calendar from 'react-calendar-pane';
+import CalendarView from './CalendarView'
+import MenuPage from './MenuPage'
 import './UserPage.css'
 
 
-const customDayRenderer = ({ handleClick, date }) => {
-  return (
-    <span onClick={() => handleClick(date)} >
-      <span className="number">{date.format('D')}</span><br/>
-      醤油ラーメン 大盛り
-    </span>
-  );
-};
-
 type Props = {
   user: ?Object,
+  menuList: Array<MenuType>,
 };
 
 type State = {
@@ -42,10 +37,6 @@ class UserPage extends Component<Props, State> {
       }
     });
   };
-
-  onSelect(date: Date, previousDate: Date, currentMonth: number) {
-    alert(date);
-  }
 
   render() {
     const user = this.props.user;
@@ -82,15 +73,25 @@ class UserPage extends Component<Props, State> {
               {user.email}
             </div>
             <SignOutButton></SignOutButton>
-            <Link to="/">Home</Link>
-            <Link to="/menu">Menu</Link>
-            <Link to="/user">User</Link>
+            <Link to="/" onClick={this.handleToggle}>Home</Link>
+            <Link to="/user" onClick={this.handleToggle}>Calendar</Link>
+            <Link to="/user/menu" onClick={this.handleToggle}>Menu</Link>
           </Drawer>
 
-          <Calendar
-            onSelect={this.onSelect}
-            dayRenderer={customDayRenderer}
-          />
+          <Switch>
+            <PropsRoute
+              exact
+              path="/user"
+              component={CalendarView}
+              user={this.props.user}
+              menuList={this.props.menuList}
+            />
+            <PropsRoute
+              path="/user/menu"
+              component={MenuPage}
+              menuList={this.props.menuList}
+            />
+          </Switch>
 
         </div>
     )

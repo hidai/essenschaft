@@ -5,10 +5,7 @@ import SignInButton from '../Auth/SignInButton'
 class HomePage extends Component<{}> {
   render() {
     return (
-        <div>
-          <div>Home</div>
-          <SignInButton></SignInButton>
-        </div>
+        <SignInButton></SignInButton>
     )
   }
 }
