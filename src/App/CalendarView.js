@@ -16,7 +16,7 @@ const customDayRenderer = (menuList: Array<MenuType>,
   const day = props.date.format('DD');
   const has = db && db.hasOwnProperty(month) && db[month].hasOwnProperty(day);
   let name = '';
-  let imgurl = 'https://i.ytimg.com/vi/Ad9-kc9_vmE/hqdefault.jpg';
+  let imgurl = '';
   if (has) {
     const menuId = db[month][day].menuId;
     for (let i = 0; i < menuList.length; ++i) {
@@ -32,17 +32,7 @@ const customDayRenderer = (menuList: Array<MenuType>,
     <div
       onClick={() => props.handleClick(props.date)}>
       <div className="number">{props.date.format('D')}</div>
-      <div style={{
-        display: "flex",
-        justifyContent: "center",
-        width: "15vw",
-        height: "4em",
-        overflow: "hidden",
-        backgroundImage: `url('${imgurl}')`,
-        backgroundSize: "contain",
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "center center",
-        }}>
+      <div className="content" style={{backgroundImage: `url('${imgurl}')`}}>
         <span style={{fontSize: "75%"}}>
           {name}
         </span>

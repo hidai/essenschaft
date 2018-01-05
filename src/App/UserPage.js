@@ -11,6 +11,7 @@ import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui-icons/Menu';
 import Avatar from 'material-ui/Avatar';
 import Drawer from 'material-ui/Drawer';
+import List, { ListItem, ListItemText } from 'material-ui/List';
 import CalendarView from './CalendarView'
 import MenuPage from './MenuPage'
 import './UserPage.css'
@@ -47,7 +48,7 @@ class UserPage extends Component<Props, State> {
         <div>
           <AppBar>
             <Toolbar>
-              <IconButton aria-label="Menu" onClick={this.handleToggle}>
+              <IconButton onClick={this.handleToggle} style={{color: "white"}}>
                 <MenuIcon />
               </IconButton>
               <Typography type="title" color="inherit">
@@ -55,6 +56,7 @@ class UserPage extends Component<Props, State> {
               </Typography>
             </Toolbar>
           </AppBar>
+
           <Drawer
             type="temporary"
             open={this.state.open}
@@ -73,9 +75,16 @@ class UserPage extends Component<Props, State> {
               {user.email}
             </div>
             <SignOutButton></SignOutButton>
-            <Link to="/" onClick={this.handleToggle}>Home</Link>
-            <Link to="/user" onClick={this.handleToggle}>Calendar</Link>
-            <Link to="/user/menu" onClick={this.handleToggle}>Menu</Link>
+            <List>
+              <ListItem button>
+                <ListItemText primary={<Link to="/user" onClick={this.handleToggle}>Calendar</Link>}>
+                </ListItemText>
+              </ListItem>
+              <ListItem button>
+                <ListItemText primary={<Link to="/user/menu" onClick={this.handleToggle}>Menu</Link>}>
+                </ListItemText>
+              </ListItem>
+            </List>
           </Drawer>
 
           <Switch>

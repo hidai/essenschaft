@@ -21,8 +21,7 @@
 }
 
 .Day {
-  padding-top: 1em;
-  padding-bottom: 1em;
+  padding: 0.5em 0.1em;
 }
 
 .Day:hover {
@@ -40,11 +39,23 @@
   color: #fff;
 }
 
-.Day.other-month {
-  color: #ddd;
-}
-
 .Day .number {
   font-weight: bold;
   font-size: 200%;
+}
+
+.Day.other-month .number {
+  color: #ddd;
+}
+
+.Day .content {
+  display: flex;
+  justify-content: center;
+  max-width: 15vw;
+  min-width: 14vw;
+  height: 3em;
+  overflow: hidden;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
 }
