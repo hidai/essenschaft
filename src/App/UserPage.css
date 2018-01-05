@@ -1,12 +1,28 @@
 .Calendar {
   border-collapse: collapse;
   padding: 0;
-  margin: 4rem auto 0;
+  margin: 1rem auto 0;
+}
+
+.topButtons {
+  margin-top: 4rem;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
 
 .Calendar th,
 .Calendar td {
   text-align: center;
+}
+
+.Calendar .month-header {
+  display: none;
+}
+
+.Day {
+  padding-top: 1em;
+  padding-bottom: 1em;
 }
 
 .Day:hover {
