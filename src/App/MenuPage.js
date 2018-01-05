@@ -10,6 +10,7 @@ import type { MenuType } from './MenuType';
 
 type Props = {
   menuList: Array<MenuType>,
+  editable: Boolean,
 };
 
 type State = {
@@ -110,7 +111,10 @@ class MenuPage extends Component<Props, State> {
           </GridList>
 
           <div style={fabContainerStyle}>
-            <AddMenuDialog fabStyle={fabStyle} />
+            {
+              this.props.editable
+                && <AddMenuDialog fabStyle={fabStyle} />
+            }
             <Button
               fab
               mini={true}

@@ -90,6 +90,7 @@ class UserPage extends Component<Props, State> {
               path="/user/menu"
               component={MenuPage}
               menuList={this.props.menuList}
+              editable={true}
             />
           </Switch>
 
