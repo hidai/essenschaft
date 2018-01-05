@@ -4,6 +4,7 @@ import Calendar from 'react-calendar-pane';
 import moment from 'moment';
 import type { MenuType } from './MenuType';
 import * as firebase from 'firebase';
+import MenuChooseDialog from './MenuChooseDialog';
 
 const customDayRenderer = (menuList: Array<MenuType>,
                            db: { [day: string]: Object },
@@ -11,7 +12,7 @@ const customDayRenderer = (menuList: Array<MenuType>,
   const day = props.date.format('DD');
   const has = db.hasOwnProperty(day);
   let name = 'no order';
-  let imgurl = '';
+  let imgurl = 'https://i.ytimg.com/vi/Ad9-kc9_vmE/hqdefault.jpg';
   if (has) {
     const menuId = db[day].menuId;
     for (let i = 0; i < menuList.length; ++i) {
@@ -24,10 +25,17 @@ const customDayRenderer = (menuList: Array<MenuType>,
     };
   }
   return (
-    <span onClick={() => props.handleClick(props.date)}>
+    <span
+      onClick={() => props.handleClick(props.date)}>
       <span className="number">{props.date.format('D')}</span><br/>
-      <img src={imgurl} style={{maxWidth: "100%", maxHeight: "100%"}} />
-      {name}
+      <img
+        src={imgurl}
+        style={{maxWidth: "15vw"}}
+        alt={name} />
+      <br />
+      <span style={{fontSize: "75%"}}>
+        {name}
+      </span>
     </span>
   );
 };
@@ -42,6 +50,8 @@ type State = {
   month: string,
   db: { [day: string]: Object },
   unsubscribe: Array<Function>,
+  menuChooseDialogOpen: boolean,
+  menuChooseDialogDate: ?moment,
 };
 
 class CalendarView extends Component<Props, State> {
@@ -50,6 +60,8 @@ class CalendarView extends Component<Props, State> {
     month: moment().format('MM'),
     db: {},
     unsubscribe: [],
+    menuChooseDialogOpen: false,
+    menuChooseDialogDate: null,
   }
 
   componentDidMount() {
@@ -83,8 +95,11 @@ class CalendarView extends Component<Props, State> {
     });
   }
 
-  onSelect(date: Date, previousDate: Date, currentMonth: number) {
-    alert(date);
+  onSelect(date: moment, previousDate: moment, currentMonth: moment) {
+    this.setState({
+      menuChooseDialogOpen: true,
+      menuChooseDialogDate: date,
+    });
   }
 
   changeMonth() {
@@ -101,17 +116,68 @@ class CalendarView extends Component<Props, State> {
     });
   }
 
+  getDocRef(): ?Object {
+    let retv: ?Object = null;
+    const date = this.state.menuChooseDialogDate;
+    if (date) {
+      const monthKey = date.format('YYYY-MM');
+      const dayKey = date.format('DD');
+      retv = firebase.firestore()
+        .collection('order')
+        .doc(this.props.user.email)
+        .collection(monthKey)
+        .doc(dayKey)
+    } else {
+      console.error('menuChooseDialogDate must be non-null here');
+    }
+    this.handleMenuChooseDialogClose();
+    return retv;
+  }
+
+  handleMenuChooseDialogSelect(menuId: string, event: Event) {
+    let d = this.getDocRef();
+    if (d != null) {
+      d.set({ menuId: menuId });
+    }
+  }
+
+  handleMenuChooseDialogDelete(menuId: string, event: Event) {
+    let d = this.getDocRef();
+    if (d != null) {
+      d.delete();
+    }
+  }
+
+  handleMenuChooseDialogClose() {
+    this.setState({
+      menuChooseDialogOpen: false,
+      menuChooseDialogDate: null,
+    });
+  }
+
   render() {
     const date = moment(`${this.state.year}-${this.state.month}`, 'YYYY-MM');
     const dayRenderer =
         customDayRenderer.bind(null, this.props.menuList, this.state.db);
     return (
-          <Calendar
-            date={date}
-            onSelect={this.onSelect}
-            dayRenderer={dayRenderer}
-            useNav={false}
-          />
+          <div>
+            <Calendar
+              date={date}
+              onSelect={this.onSelect.bind(this)}
+              dayRenderer={dayRenderer}
+              useNav={false}
+            />
+            {
+              this.state.menuChooseDialogOpen &&
+                <MenuChooseDialog
+                  open={true}
+                  date={this.state.menuChooseDialogDate}
+                  menuList={this.props.menuList}
+                  handleSelect={this.handleMenuChooseDialogSelect.bind(this)}
+                  handleDelete={this.handleMenuChooseDialogDelete.bind(this)}
+                  handleClose={this.handleMenuChooseDialogClose.bind(this)} />
+            }
+          </div>
     );
   }
 }

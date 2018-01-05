@@ -91,6 +91,7 @@ class UserPage extends Component<Props, State> {
               component={MenuPage}
               menuList={this.props.menuList}
               editable={true}
+              handleMenuClick={() => {}}
             />
           </Switch>
 

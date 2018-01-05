@@ -10,7 +10,8 @@ import type { MenuType } from './MenuType';
 
 type Props = {
   menuList: Array<MenuType>,
-  editable: Boolean,
+  editable: boolean,
+  handleMenuClick: Function,
 };
 
 type State = {
@@ -83,7 +84,9 @@ class MenuPage extends Component<Props, State> {
     sortedMenuList.sort(this.getCompareFunc());
     sortedMenuList.forEach((menu) => {
       let elem = (
-          <GridListTile key={menu.id}>
+          <GridListTile
+            key={menu.id}
+            onClick={this.props.handleMenuClick.bind(null, menu.id)}>
             <img src={menu.imgurl} alt={menu.name}/>
             <GridListTileBar title={menu.name} subtitle="菱膳">
             </GridListTileBar>
