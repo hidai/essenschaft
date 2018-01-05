@@ -17,12 +17,14 @@ type Props = {
 type State = {
   user: ?Object,
   menuList: Array<MenuType>,
+  order: Map<string, string>,
 };
 
 class AppRouterBase extends Component<Props, State> {
   state = {
     user: null,
     menuList: [],
+    order: new Map(),
   }
 
   constructor() {
