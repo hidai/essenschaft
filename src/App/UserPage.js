@@ -14,6 +14,7 @@ import Drawer from 'material-ui/Drawer';
 import List, { ListItem, ListItemText } from 'material-ui/List';
 import CalendarView from './CalendarView'
 import MenuPage from './MenuPage'
+import ListPage from './ListPage'
 import './UserPage.css'
 
 
@@ -56,13 +57,16 @@ class UserPage extends Component<Props, State> {
                 <Switch>
                   <Route
                     path="/user/lunch"
-                    render={() => <span>Lunch order</span>} />
+                    render={() => <span>Lunch Order</span>} />
                   <Route
                     path="/user/dinner"
-                    render={() => <span>Dinner order</span>} />
+                    render={() => <span>Dinner Order</span>} />
                   <Route
                     path="/user/menu"
                     render={() => <span>Menu</span>} />
+                  <Route
+                    path="/user/list"
+                    render={() => <span>Order List</span>} />
                 </Switch>
               </Typography>
             </Toolbar>
@@ -111,6 +115,14 @@ class UserPage extends Component<Props, State> {
                   }>
                 </ListItemText>
               </ListItem>
+              <ListItem button>
+                <ListItemText primary={
+                    <Link to="/user/list" onClick={this.handleToggle}>
+                      Order List
+                    </Link>
+                  }>
+                </ListItemText>
+              </ListItem>
             </List>
           </Drawer>
 
@@ -138,6 +150,11 @@ class UserPage extends Component<Props, State> {
               vendorList={this.props.vendorList}
               editable={true}
               handleMenuClick={() => {}}
+            />
+            <PropsRoute
+              path="/user/list"
+              component={ListPage}
+              menuList={this.props.menuList}
             />
           </Switch>
 
