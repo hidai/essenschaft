@@ -41,11 +41,23 @@ class AddMenuDialog extends Component<Props, State> {
     lunchOnly: false,
   }
 
-  handleOpen = () => {
-    this.setState({open: true});
+  handleOpen() {
+    this.setState((prevState) => {
+      if (prevState.open) {
+        return {};
+      } else {
+        return {
+          open: true,
+          name: '',
+          imgurl: '',
+          vendor: '',
+          lunchOnly: false,
+        };
+      }
+    });
   };
 
-  handleClose = () => {
+  handleClose() {
     this.setState({open: false});
   };
 
@@ -136,7 +148,7 @@ class AddMenuDialog extends Component<Props, State> {
             </DialogContent>
             <DialogActions>
               <Button
-                onClick={this.handleClose}
+                onClick={this.handleClose.bind(this)}
                 color="primary">
                 Cancel
               </Button>
@@ -152,7 +164,7 @@ class AddMenuDialog extends Component<Props, State> {
             fab
             color="accent"
             style={this.props.fabStyle}
-            onClick={this.handleOpen}>
+            onClick={this.handleOpen.bind(this)}>
             <IconAdd />
           </Button>
         </div>
