@@ -10,6 +10,7 @@ import type { MenuType } from './MenuType';
 
 type Props = {
   menuList: Array<MenuType>,
+  vendorList: Array<string>,
   editable: boolean,
   handleMenuClick: Function,
 };
@@ -115,8 +116,10 @@ class MenuPage extends Component<Props, State> {
 
           <div style={fabContainerStyle}>
             {
-              this.props.editable
-                && <AddMenuDialog fabStyle={fabStyle} />
+              this.props.editable &&
+                <AddMenuDialog
+                  fabStyle={fabStyle}
+                  vendorList={this.props.vendorList} />
             }
             <Button
               fab

@@ -10,6 +10,7 @@ import Dialog, {
 } from 'material-ui/Dialog';
 import { FormControlLabel } from 'material-ui/Form';
 import TextField from 'material-ui/TextField';
+import { MenuItem } from 'material-ui/Menu';
 import Checkbox from 'material-ui/Checkbox';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
@@ -17,6 +18,7 @@ import type { MenuType } from './MenuType';
 
 type Props = {
   fabStyle: Object,
+  vendorList: Array<string>,
   fullScreen: boolean,  // from withMobileDialog
 };
 
@@ -24,6 +26,7 @@ type State = {
   open: boolean,
   name: string,
   imgurl: string,
+  vendor: string,
   lunchOnly: boolean,
 };
 
@@ -32,6 +35,9 @@ class AddMenuDialog extends Component<Props, State> {
     open: false,
     name: '',
     imgurl: '',
+    vendor: this.props.vendorList && this.props.vendorList.length > 0
+      ? this.props.vendorList[0]
+      : '',
     lunchOnly: false,
   }
 
@@ -53,6 +59,11 @@ class AddMenuDialog extends Component<Props, State> {
     this.setState({imgurl: value});
   };
 
+  updateVendor = (event: Object) => {
+    const value: string = event.target.value;
+    this.setState({vendor: value});
+  };
+
   updateLunchOnlyCheck = (event: Object) => {
     const value: boolean = event.target.checked;
     this.setState({lunchOnly: value});
@@ -62,6 +73,7 @@ class AddMenuDialog extends Component<Props, State> {
     let doc: MenuType = {
       name: this.state.name,
       imgurl: this.state.imgurl,
+      vendor: this.state.vendor,
       lunchOnly: this.state.lunchOnly,
       lastUpdate: new Date(),
     };
@@ -100,6 +112,18 @@ class AddMenuDialog extends Component<Props, State> {
                 }}
                 fullWidth
               />
+              <TextField
+                select
+                label="Vendor"
+                value={this.state.vendor}
+                InputProps={{
+                  onChange: this.updateVendor
+                }}
+                fullWidth>
+                {this.props.vendorList.map((i) => (
+                  <MenuItem key={i} value={i}>{i}</MenuItem>
+                ))}
+              </TextField>
               <FormControlLabel
                 control={
                   <Checkbox

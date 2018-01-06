@@ -20,6 +20,7 @@ import './UserPage.css'
 type Props = {
   user: ?Object,
   menuList: Array<MenuType>,
+  vendorList: Array<string>,
 };
 
 type State = {
@@ -134,6 +135,7 @@ class UserPage extends Component<Props, State> {
               path="/user/menu"
               component={MenuPage}
               menuList={this.props.menuList}
+              vendorList={this.props.vendorList}
               editable={true}
               handleMenuClick={() => {}}
             />

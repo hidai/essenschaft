@@ -17,6 +17,7 @@ type Props = {
 type State = {
   user: ?Object,
   menuList: Array<MenuType>,
+  vendorList: Array<string>,
   order: Map<string, string>,
 };
 
@@ -25,6 +26,7 @@ class AppRouterBase extends Component<Props, State> {
     user: null,
     menuList: [],
     order: new Map(),
+    vendorList: [],
   }
 
   constructor() {
@@ -53,6 +55,7 @@ class AppRouterBase extends Component<Props, State> {
           id:         doc.id,
           name:       doc.data().name,
           imgurl:     doc.data().imgurl,
+          vendor:     doc.data().vendor,
           lunchOnly:  doc.data().lunchOnly,
           lastUpdate: doc.data().lastUpdate,
         });
@@ -63,6 +66,18 @@ class AppRouterBase extends Component<Props, State> {
     };
     firebase.firestore().collection("menu").get().then(updateMenuList);
     firebase.firestore().collection("menu").onSnapshot(updateMenuList);
+
+    const updateVendorList = (response) => {
+      let vendorList: Array<string> = [];
+      response.forEach((doc) => {
+        vendorList.push(doc.id);
+      });
+      this.setState({
+        vendorList: vendorList
+      });
+    };
+    firebase.firestore().collection('vendor').get().then(updateVendorList);
+    firebase.firestore().collection('vendor').onSnapshot(updateVendorList);
   }
 
   isAuthorized() {
@@ -86,6 +101,7 @@ class AppRouterBase extends Component<Props, State> {
           authorized={this.isAuthorized()}
           user={this.state.user}
           menuList={this.state.menuList}
+          vendorList={this.state.vendorList}
         />
       </div>
     )
