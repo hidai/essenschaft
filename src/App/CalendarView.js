@@ -76,11 +76,8 @@ class CalendarView extends Component<Props, State> {
       .doc(this.props.user.email);
 
     for (let i of [-1, 0, 1]) {
-      const monthKey =
-        this.state.currentYearMonth
-        .clone()
-        .add(i, 'months')
-        .format('YYYY-MM');
+      const monthKey = this.getMonthKey(
+        this.state.currentYearMonth.clone().add(i, 'months'));
       const monthDb = emailDb.collection(monthKey);
 
       const updateDb = (response) => {
@@ -149,16 +146,19 @@ class CalendarView extends Component<Props, State> {
     });
   }
 
+  getMonthKey(date: moment): string {
+    return date.format('YYYY-MM');
+  }
+
   getDocRef(): ?Object {
     let retv: ?Object = null;
     const date = this.state.menuChooseDialogDate;
     if (date) {
-      const monthKey = date.format('YYYY-MM');
       const dayKey = date.format('DD');
       retv = firebase.firestore()
         .collection('order')
         .doc(this.props.user.email)
-        .collection(monthKey)
+        .collection(this.getMonthKey(date))
         .doc(dayKey)
     } else {
       console.error('menuChooseDialogDate must be non-null here');
