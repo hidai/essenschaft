@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import { Switch, Link } from 'react-router-dom'
+import { Route, Switch, Link } from 'react-router-dom'
 import PropsRoute from '../route/PropsRoute'
 import type { MenuType } from './MenuType';
 import SignOutButton from '../Auth/SignOutButton'
@@ -52,7 +52,17 @@ class UserPage extends Component<Props, State> {
                 <MenuIcon />
               </IconButton>
               <Typography type="title" color="inherit">
-                Lunch order
+                <Switch>
+                  <Route
+                    path="/user/lunch"
+                    render={() => <span>Lunch order</span>} />
+                  <Route
+                    path="/user/dinner"
+                    render={() => <span>Dinner order</span>} />
+                  <Route
+                    path="/user/menu"
+                    render={() => <span>Menu</span>} />
+                </Switch>
               </Typography>
             </Toolbar>
           </AppBar>
@@ -77,11 +87,27 @@ class UserPage extends Component<Props, State> {
             <SignOutButton></SignOutButton>
             <List>
               <ListItem button>
-                <ListItemText primary={<Link to="/user" onClick={this.handleToggle}>Calendar</Link>}>
+                <ListItemText primary={
+                    <Link to="/user/lunch" onClick={this.handleToggle}>
+                      Lunch order
+                    </Link>
+                  }>
                 </ListItemText>
               </ListItem>
               <ListItem button>
-                <ListItemText primary={<Link to="/user/menu" onClick={this.handleToggle}>Menu</Link>}>
+                <ListItemText primary={
+                    <Link to="/user/dinner" onClick={this.handleToggle}>
+                      Dinner order
+                    </Link>
+                  }>
+                </ListItemText>
+              </ListItem>
+              <ListItem button>
+                <ListItemText primary={
+                    <Link to="/user/menu" onClick={this.handleToggle}>
+                      Menu
+                    </Link>
+                  }>
                 </ListItemText>
               </ListItem>
             </List>
@@ -90,10 +116,19 @@ class UserPage extends Component<Props, State> {
           <Switch>
             <PropsRoute
               exact
-              path="/user"
+              path="/user/lunch"
               component={CalendarView}
               user={this.props.user}
               menuList={this.props.menuList}
+              type="lunch"
+            />
+            <PropsRoute
+              exact
+              path="/user/dinner"
+              component={CalendarView}
+              user={this.props.user}
+              menuList={this.props.menuList}
+              type="dinner"
             />
             <PropsRoute
               path="/user/menu"

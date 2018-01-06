@@ -39,7 +39,7 @@ class AppRouterBase extends Component<Props, State> {
       });
       if (user != null) {
         console.log('Signed-in: ' + JSON.stringify(user));
-        this.props.history.push("/user");
+        this.props.history.push("/user/lunch");
       } else {
         console.log('Signed-out: ' + JSON.stringify(user));
         this.props.history.push("/");
@@ -75,7 +75,7 @@ class AppRouterBase extends Component<Props, State> {
         <PublicRoute
           exact
           path="/"
-          failedPath="/user"
+          failedPath="/user/lunch"
           component={HomePage}
           authorized={this.isAuthorized()}
         />
