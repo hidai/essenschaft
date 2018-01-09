@@ -100,18 +100,25 @@ class ListView extends Component<Props, State> {
   }
 
   render() {
+    let head = [];
+    head.push(<TableCell>User</TableCell>);
+    for (let i = 0; i < 5; i++) {
+      const day = this.props.date.clone().add(i, 'days');
+      head.push(
+        <TableCell>
+          <div style={{whiteSpace: "nowrap"}}>{day.format('MMM')}</div>
+          <div style={{whiteSpace: "nowrap"}}>{day.format('Do')}</div>
+          <div style={{whiteSpace: "nowrap"}}>{day.format('ddd')}</div>
+        </TableCell>
+      );
+    }
     return (
         <div>
           <Paper>
             <Table>
               <TableHead>
                 <TableRow>
-                <TableCell>User</TableCell>
-                <TableCell>Mon</TableCell>
-                <TableCell>Tue</TableCell>
-                <TableCell>Wed</TableCell>
-                <TableCell>Thu</TableCell>
-                <TableCell>Fri</TableCell>
+                  {head}
                 </TableRow>
               </TableHead>
               <TableBody>
