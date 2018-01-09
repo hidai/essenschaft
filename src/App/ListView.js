@@ -82,8 +82,8 @@ class ListView extends Component<Props, State> {
         this.setState({
           tableData: newTableData,
         });
-        Object.keys(newTableData).forEach((user) => {
-          this.requestUserData(user);
+        response.forEach((doc) => {
+          this.requestUserData(doc.id);
         });
       });
   }
@@ -93,21 +93,25 @@ class ListView extends Component<Props, State> {
   }
 
   componentDidUpdate(prevProps: Props, prevState: State) {
-    if (prevProps.type !== this.props.type) {
-      console.log(`componentDidUpdate(${prevProps.type} -> ${this.props.type})`);
+    if (prevProps.type !== this.props.type ||
+        prevProps.date !== this.props.date) {
       this.fetchData();
     }
   }
 
   render() {
+    const cellStyle = {
+      padding: '8px',
+      textAlign: 'center',
+      verticalAlign: 'middle',
+    };
     let head = [];
-    head.push(<TableCell>User</TableCell>);
+    head.push(<TableCell key={-1} style={cellStyle}>User</TableCell>);
     for (let i = 0; i < 5; i++) {
       const day = this.props.date.clone().add(i, 'days');
       head.push(
-        <TableCell>
-          <div style={{whiteSpace: "nowrap"}}>{day.format('MMM')}</div>
-          <div style={{whiteSpace: "nowrap"}}>{day.format('Do')}</div>
+        <TableCell key={i} style={cellStyle}>
+          <div style={{whiteSpace: "nowrap"}}>{day.format('MMM Do')}</div>
           <div style={{whiteSpace: "nowrap"}}>{day.format('ddd')}</div>
         </TableCell>
       );
@@ -115,7 +119,7 @@ class ListView extends Component<Props, State> {
     return (
         <div>
           <Paper>
-            <Table>
+            <Table style={{tableLayout: "fixed"}}>
               <TableHead>
                 <TableRow>
                   {head}
@@ -126,11 +130,13 @@ class ListView extends Component<Props, State> {
                   Object.keys(this.state.tableData).map((user) => {
                     const menuNameArray = this.state.tableData[user];
                     return (
-                        <TableRow key={user}>
-                          <TableCell>{user}</TableCell>
+                        <TableRow key={user} hover>
+                          <TableCell style={cellStyle}>
+                            {user.replace(/@.*/, '')}
+                          </TableCell>
                           {
                             menuNameArray.map((menuId, i) => (
-                              <TableCell key={i}>
+                              <TableCell key={i} style={cellStyle}>
                                 {
                                   menuId ? this.getMenuNameFromId(menuId) : ''
                                 }
