@@ -20,7 +20,7 @@ class ListPage extends Component<Props, State> {
   }
 
   updateType(event: Object) {
-    const value: string = event.target.value;
+    const value = event.target.value;
     this.setState({
       type: value,
     });
@@ -29,7 +29,7 @@ class ListPage extends Component<Props, State> {
   render() {
     return (
         <div style={{marginTop: "5rem"}}>
-          <div>
+          <div style={{margin: "1em"}}>
             <TextField
               select
               value={this.state.type}

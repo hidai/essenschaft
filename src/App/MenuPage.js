@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import { GridList, GridListTile, GridListTileBar } from 'material-ui/GridList';
+import Paper from 'material-ui/Paper';
 import AddMenuDialog from './AddMenuDialog';
 import Button from 'material-ui/Button';
 import IconZoomIn from 'material-ui-icons/ZoomIn';
@@ -108,11 +109,13 @@ class MenuPage extends Component<Props, State> {
     };
     return (
         <div>
-          <GridList cols={this.state.gridCols}>
-            {
-              list.length > 0 ? list : <span>Loading...</span>
-            }
-          </GridList>
+          <Paper>
+            <GridList cols={this.state.gridCols}>
+              {
+                list.length > 0 ? list : <span>Loading...</span>
+              }
+            </GridList>
+          </Paper>
 
           <div style={fabContainerStyle}>
             {

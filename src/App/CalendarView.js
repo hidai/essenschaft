@@ -4,6 +4,7 @@ import Calendar from 'react-calendar-pane';
 import moment from 'moment';
 import type { MenuType } from './MenuType';
 import * as firebase from 'firebase';
+import Paper from 'material-ui/Paper';
 import MenuChooseDialog from './MenuChooseDialog';
 import Button from 'material-ui/Button';
 import IconKeyboardArrowLeft from 'material-ui-icons/KeyboardArrowLeft'
@@ -210,12 +211,14 @@ class CalendarView extends Component<Props, State> {
                 <IconKeyboardArrowRight />
               </Button>
             </div>
-            <Calendar
-              month={date}
-              onSelect={this.onSelect.bind(this)}
-              dayRenderer={dayRenderer}
-              useNav={false}
-            />
+            <Paper>
+              <Calendar
+                month={date}
+                onSelect={this.onSelect.bind(this)}
+                dayRenderer={dayRenderer}
+                useNav={false}
+              />
+            </Paper>
             {
               this.state.menuChooseDialogOpen &&
                 <MenuChooseDialog
