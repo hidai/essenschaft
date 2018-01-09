@@ -76,6 +76,7 @@ class CalendarView extends Component<Props, State> {
     const emailDb = firebase.firestore()
       .collection('order')
       .doc(this.props.user.email);
+    emailDb.set({});  // create if not exist
 
     for (let i of [-1, 0, 1]) {
       const monthKey = this.getMonthKey(
