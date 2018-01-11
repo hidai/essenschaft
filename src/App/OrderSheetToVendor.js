@@ -1,13 +1,12 @@
 // @flow
 import React, { Component } from 'react';
-import type { MenuType } from './MenuType';
 import moment from 'moment';
 import * as firebase from 'firebase';
 import Paper from 'material-ui/Paper';
 
 type Props = {
-  menuList: Array<MenuType>,
   date: moment,
+  lookupMenuNameFromId: Function,
 };
 
 type State = {
@@ -24,17 +23,6 @@ type State = {
 class OrderSheetToVendor extends Component<Props, State> {
   state = {
     menuCount: {},
-  }
-
-  // This is a copy from ListView.js!!!!!!!!!!!
-  getMenuNameFromId(id: string): string {
-    for (let i = 0; i < this.props.menuList.length; ++i) {
-      const menu = this.props.menuList[i];
-      if (menu.id === id) {
-        return menu.name;
-      }
-    }
-    return '(unknown)';
   }
 
   // This is a copy from ListView.js!!!!!!!!!!!
@@ -126,7 +114,7 @@ class OrderSheetToVendor extends Component<Props, State> {
                 Object.keys(this.state.menuCount[date]).map((menuId) => (
                   this.state.menuCount[date][menuId].lunch > 0 &&
                   <div>
-                    {this.getMenuNameFromId(menuId)} x {this.state.menuCount[date][menuId].lunch}
+                    {this.props.lookupMenuNameFromId(menuId)} x {this.state.menuCount[date][menuId].lunch}
                   </div>
                 ))
               }

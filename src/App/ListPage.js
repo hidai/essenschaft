@@ -1,13 +1,12 @@
 // @flow
 import React, { Component } from 'react';
-import type { MenuType } from './MenuType';
 import TextField from 'material-ui/TextField';
 import ListView from './ListView'
 import { MenuItem } from 'material-ui/Menu';
 import moment from 'moment';
 
 type Props = {
-  menuList: Array<MenuType>,
+  lookupMenuNameFromId: Function,
 };
 
 type State = {
@@ -77,7 +76,7 @@ class ListPage extends Component<Props, State> {
           <ListView
             date={this.getMomentDateFromWeekId(this.state.weekId)}
             type={this.state.type}
-            menuList={this.props.menuList}
+            lookupMenuNameFromId={this.props.lookupMenuNameFromId}
           />
         </div>
      );

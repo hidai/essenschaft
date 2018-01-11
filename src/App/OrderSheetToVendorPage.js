@@ -1,13 +1,12 @@
 // @flow
 import React, { Component } from 'react';
-import type { MenuType } from './MenuType';
 import TextField from 'material-ui/TextField';
 import { MenuItem } from 'material-ui/Menu';
 import moment from 'moment';
 import OrderSheetToVendor from './OrderSheetToVendor';
 
 type Props = {
-  menuList: Array<MenuType>,
+  lookupMenuNameFromId: Function,
 };
 
 type State = {
@@ -58,7 +57,7 @@ class OrderSheetToVendorPage extends Component<Props, State> {
           </div>
           <OrderSheetToVendor
             date={this.getMomentDateFromWeekId(this.state.weekId)}
-            menuList={this.props.menuList}
+            lookupMenuNameFromId={this.props.lookupMenuNameFromId}
         />
         </div>
      );

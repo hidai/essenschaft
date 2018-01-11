@@ -23,6 +23,8 @@ type Props = {
   user: ?Object,
   menuList: Array<MenuType>,
   vendorList: Array<string>,
+  lookupMenuromId: Function,
+  lookupMenuNameFromId: Function,
 };
 
 type State = {
@@ -145,6 +147,7 @@ class UserPage extends Component<Props, State> {
               component={CalendarView}
               user={this.props.user}
               menuList={this.props.menuList}
+              lookupMenuFromId={this.props.lookupMenuFromId}
               type="lunch"
             />
             <PropsRoute
@@ -153,6 +156,7 @@ class UserPage extends Component<Props, State> {
               component={CalendarView}
               user={this.props.user}
               menuList={this.props.menuList}
+              lookupMenuFromId={this.props.lookupMenuFromId}
               type="dinner"
             />
             <PropsRoute
@@ -166,12 +170,12 @@ class UserPage extends Component<Props, State> {
             <PropsRoute
               path="/user/list"
               component={ListPage}
-              menuList={this.props.menuList}
+              lookupMenuNameFromId={this.props.lookupMenuNameFromId}
             />
             <PropsRoute
               path="/user/order2vendor"
               component={OrderSheetToVendorPage}
-              menuList={this.props.menuList}
+              lookupMenuNameFromId={this.props.lookupMenuNameFromId}
             />
           </Switch>
 

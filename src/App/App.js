@@ -82,6 +82,21 @@ class AppRouterBase extends Component<Props, State> {
     return this.state.user != null;
   }
 
+  lookupMenuFromId(id: string): MenuType {
+    for (let i = 0; i < this.state.menuList.length; ++i) {
+      const menu = this.state.menuList[i];
+      if (menu.id === id) {
+        return menu;
+      }
+    }
+    return null;
+  }
+
+  lookupMenuNameFromId(id: string): string {
+    const menu = this.lookupMenuFromId(id);
+    return menu ? menu.name : '(unknown)';
+  }
+
   render() {
     return (
       <div>
@@ -99,6 +114,8 @@ class AppRouterBase extends Component<Props, State> {
           authorized={this.isAuthorized()}
           user={this.state.user}
           menuList={this.state.menuList}
+          lookupMenuFromId={this.lookupMenuFromId.bind(this)}
+          lookupMenuNameFromId={this.lookupMenuNameFromId.bind(this)}
           vendorList={this.state.vendorList}
         />
       </div>

@@ -11,7 +11,7 @@ import IconKeyboardArrowLeft from 'material-ui-icons/KeyboardArrowLeft'
 import IconKeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight'
 
 const customDayRenderer = (type: 'lunch' | 'dinner',
-                           menuList: Array<MenuType>,
+                           lookupMenuFromId: Function,
                            db: { [month: string]: { [day: string]: Object } },
                            props: Object) => {
   const month = props.date.format('YYYY-MM') + '-' + type;
@@ -20,15 +20,11 @@ const customDayRenderer = (type: 'lunch' | 'dinner',
   let name = '';
   let imgurl = '';
   if (has) {
-    const menuId = db[month][day].menuId;
-    for (let i = 0; i < menuList.length; ++i) {
-      const menu = menuList[i];
-      if (menu.id === menuId) {
-        name = menu.name;
-        imgurl = menu.imgurl;
-        break;
-      }
-    };
+    const menu = lookupMenuFromId(db[month][day].menuId);
+    if (menu) {
+      name = menu.name;
+      imgurl = menu.imgurl;
+    }
   }
   return (
     <div
@@ -47,6 +43,7 @@ type Props = {
   user: { email: string },
   menuList: Array<MenuType>,
   type: 'lunch' | 'dinner',
+  lookupMenuFromId: Function,
 };
 
 type State = {
@@ -197,7 +194,7 @@ class CalendarView extends Component<Props, State> {
     let prevMonth = date.clone().subtract(1, 'months');
     let nextMonth = date.clone().add(1, 'months');
     const dayRenderer =
-        customDayRenderer.bind(null, this.props.type, this.props.menuList, this.state.db);
+        customDayRenderer.bind(null, this.props.type, this.props.lookupMenuFromId, this.state.db);
     return (
           <div>
             <div className="topButtons">

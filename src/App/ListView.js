@@ -3,13 +3,12 @@ import React, { Component } from 'react';
 import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 import Paper from 'material-ui/Paper';
 import moment from 'moment';
-import type { MenuType } from './MenuType';
 import * as firebase from 'firebase';
 
 type Props = {
   date: moment,
   type: 'lunch' | 'dinner',
-  menuList: Array<MenuType>,
+  lookupMenuNameFromId: Function,
 };
 
 type State = {
@@ -19,16 +18,6 @@ type State = {
 class ListView extends Component<Props, State> {
   state = {
     tableData: {},
-  }
-
-  getMenuNameFromId(id: string): string {
-    for (let i = 0; i < this.props.menuList.length; ++i) {
-      const menu = this.props.menuList[i];
-      if (menu.id === id) {
-        return menu.name;
-      }
-    }
-    return '(unknown)';
   }
 
   requestMenuIdByDate(user: string,
@@ -138,7 +127,7 @@ class ListView extends Component<Props, State> {
                             menuNameArray.map((menuId, i) => (
                               <TableCell key={i} style={cellStyle}>
                                 {
-                                  menuId ? this.getMenuNameFromId(menuId) : ''
+                                  menuId ? this.props.lookupMenuNameFromId(menuId) : ''
                                 }
                               </TableCell>
                             ))
