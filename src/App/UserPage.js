@@ -69,10 +69,10 @@ class UserPage extends Component<Props, State> {
                     render={() => <span>Menu</span>} />
                   <Route
                     path="/user/list"
-                    render={() => <span>Order List</span>} />
+                    render={() => <span>Weekly Order List</span>} />
                   <Route
                     path="/user/order2vendor"
-                    render={() => <span>Order Sheet to Vendor</span>} />
+                    render={() => <span>Order Sheet for Vendor</span>} />
                 </Switch>
               </Typography>
             </Toolbar>
@@ -124,7 +124,7 @@ class UserPage extends Component<Props, State> {
               <ListItem button>
                 <ListItemText primary={
                     <Link to="/user/list" onClick={this.handleToggle}>
-                      Order List
+                      Weekly Order List
                     </Link>
                   }>
                 </ListItemText>
@@ -132,7 +132,7 @@ class UserPage extends Component<Props, State> {
               <ListItem button>
                 <ListItemText primary={
                     <Link to="/user/order2vendor" onClick={this.handleToggle}>
-                      Order Sheet to Vendor
+                      Order Sheet for Vendor
                     </Link>
                   }>
                 </ListItemText>
