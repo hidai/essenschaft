@@ -9,18 +9,17 @@ import MenuChooseDialog from './MenuChooseDialog';
 import Button from 'material-ui/Button';
 import IconKeyboardArrowLeft from 'material-ui-icons/KeyboardArrowLeft'
 import IconKeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight'
+import type { OrderType } from './OrderType';
 
-const customDayRenderer = (type: 'lunch' | 'dinner',
-                           lookupMenuFromId: Function,
-                           db: { [month: string]: { [day: string]: Object } },
+const customDayRenderer = (lookupMenuFromId: Function,
+                           db: { [day: string]: OrderType },
                            props: Object) => {
-  const month = props.date.format('YYYY-MM') + '-' + type;
-  const day = props.date.format('DD');
-  const has = db && db.hasOwnProperty(month) && db[month].hasOwnProperty(day);
+  const key = props.date.format('YYYY-MM-DD');
+  const has = db && db.hasOwnProperty(key);
   let name = '';
   let imgurl = '';
   if (has) {
-    const menu = lookupMenuFromId(db[month][day].menuId);
+    const menu = lookupMenuFromId(db[key].menuId);
     if (menu) {
       name = menu.name;
       imgurl = menu.imgurl;
@@ -48,7 +47,9 @@ type Props = {
 
 type State = {
   currentYearMonth: moment,
-  db: { [month: string]: { [day: string]: Object } },
+  db: {
+    [day: string]: OrderType,
+  },
   unsubscribe: Array<Function>,
   menuChooseDialogOpen: boolean,
   menuChooseDialogDate: ?moment,
@@ -70,41 +71,39 @@ class CalendarView extends Component<Props, State> {
     this.subscribe();
   }
 
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+
   subscribe() {
-    const emailDb = firebase.firestore()
+    const handler = firebase.firestore()
       .collection('order')
-      .doc(this.props.user.email);
-    emailDb.set({});  // create if not exist
-
-    for (let i of [-1, 0, 1]) {
-      const monthKey = this.getMonthKey(
-        this.state.currentYearMonth.clone().add(i, 'months'));
-      const monthDb = emailDb.collection(monthKey);
-
-      const updateDb = (response) => {
+      .where('userId', '==', this.props.user.email)
+      .where('type', '==', this.props.type)
+      .onSnapshot((response) => {
         this.setState((prevState) => {
           let newDb = prevState.db;
-          newDb[monthKey] = {};
           response.forEach((doc) => {
-            newDb[monthKey][doc.id] = doc.data();
+            newDb[doc.data().date] = doc.data();
           });
           return {
             db: newDb,
           };
         });
-      };
-
-      monthDb.get().then(updateDb);
-      const handler = monthDb.onSnapshot(updateDb);
-
-      this.setState((prevState) => {
-        let newUnsubscribe = prevState.unsubscribe;
-        newUnsubscribe.push(handler);
-        return {
-          unsubscribe: newUnsubscribe,
-        };
       });
-    }
+    this.setState((prevState) => {
+      let newUnsubscribe = prevState.unsubscribe;
+      newUnsubscribe.push(handler);
+      return {
+        unsubscribe: newUnsubscribe,
+      };
+    });
+  }
+
+  clearDb() {
+    this.setState({
+      db: {},
+    });
   }
 
   unsubscribe() {
@@ -120,8 +119,18 @@ class CalendarView extends Component<Props, State> {
     });
   }
 
+  componentDidUpdate(prevProps: Props, prevState: State) {
+    if (prevProps.user !== this.props.user ||
+        prevProps.type !== this.props.type) {
+      this.unsubscribe();
+      this.clearDb();
+      this.subscribe();
+    }
+  }
+
   handlePrevMonth() {
     this.unsubscribe();
+    this.clearDb();
     this.subscribe();
     this.setState((prevState) => {
       return {
@@ -132,6 +141,7 @@ class CalendarView extends Component<Props, State> {
 
   handleNextMonth() {
     this.unsubscribe();
+    this.clearDb();
     this.subscribe();
     this.setState((prevState) => {
       return {
@@ -147,38 +157,43 @@ class CalendarView extends Component<Props, State> {
     });
   }
 
-  getMonthKey(date: moment): string {
-    return date.format('YYYY-MM') + '-' + this.props.type;
+  getKey(date: moment): string {
+    return date.format('YYYY-MM-DD')
+      + '-' + this.props.user.email
+      + '-' + this.props.type;
   }
 
-  getDocRef(): ?Object {
-    let retv: ?Object = null;
-    const date = this.state.menuChooseDialogDate;
-    if (date) {
-      const dayKey = date.format('DD');
-      retv = firebase.firestore()
+  getDocRef(date: moment): Object {
+    const retv = firebase.firestore()
         .collection('order')
-        .doc(this.props.user.email)
-        .collection(this.getMonthKey(date))
-        .doc(dayKey)
-    } else {
-      console.error('menuChooseDialogDate must be non-null here');
-    }
+        .doc(this.getKey(date));
     this.handleMenuChooseDialogClose();
     return retv;
   }
 
   handleMenuChooseDialogSelect(menuId: string, event: Event) {
-    let d = this.getDocRef();
-    if (d != null) {
-      d.set({ menuId: menuId });
+    const date = this.state.menuChooseDialogDate;
+    if (date) {
+      const d = this.getDocRef(date);
+      if (d != null) {
+        d.set({
+          date: date.format('YYYY-MM-DD'),
+          userId: this.props.user.email,
+          type: this.props.type,
+          menuId: menuId,
+          lastUpdate: new Date(),
+        });
+      }
     }
   }
 
   handleMenuChooseDialogDelete(menuId: string, event: Event) {
-    let d = this.getDocRef();
-    if (d != null) {
-      d.delete();
+    const date = this.state.menuChooseDialogDate;
+    if (date) {
+      const d = this.getDocRef(date);
+      if (d != null) {
+        d.delete();
+      }
     }
   }
 
@@ -193,8 +208,10 @@ class CalendarView extends Component<Props, State> {
     const date = this.state.currentYearMonth;
     let prevMonth = date.clone().subtract(1, 'months');
     let nextMonth = date.clone().add(1, 'months');
-    const dayRenderer =
-        customDayRenderer.bind(null, this.props.type, this.props.lookupMenuFromId, this.state.db);
+    const dayRenderer = customDayRenderer.bind(
+      null,
+      this.props.lookupMenuFromId,
+      this.state.db);
     return (
           <div>
             <div className="topButtons">

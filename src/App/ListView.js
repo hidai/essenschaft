@@ -12,79 +12,65 @@ type Props = {
 };
 
 type State = {
-  tableData: { [user: string]: Array<?string> },
+  tableData: { [userId: string]: Array<?string> },
+  unsubscriber: Function,
 };
 
 class ListView extends Component<Props, State> {
   state = {
     tableData: {},
+    unsubscriber: undefined,
   }
 
-  requestMenuIdByDate(user: string,
-                      type: 'lunch' | 'dinner',
-                      date: moment): Promise<?string> {
-    console.log(`requestMenuIdByDate(${user}, ${type}, ${date.format('YYYY-MM-DD')})`);
-    return firebase.firestore()
-      .collection('order')
-      .doc(user)
-      .collection(date.format('YYYY-MM') + '-' + type)
-      .get()
-      .then((response) => {
-        const day = date.format('DD');
-        for (let doc of response.docs) {
-          if (doc.id === day) {
-            return new Promise((resolve, reject) => {
-              resolve(doc.data().menuId);
-            });
-          }
-        }
-        return Promise.resolve();
-      });
-  }
-
-  requestUserData(user: string) {
-    console.log(`requestUserData(${user})`);
-    for (let i = 0; i < 5; i++) {
-      const day = this.props.date.clone().add(i, 'days');
-      this.requestMenuIdByDate(user, this.props.type, day)
-        .then((menuId) => {
-          this.setState((prevState) => {
-            let newTableData = prevState.tableData;
-            newTableData[user][i] = menuId;
-            return {
-              tableData: newTableData,
-            }
-          });
-        });
+  unsubscribe() {
+    if (this.state.unsubscriber) {
+      this.state.unsubscriber();
     }
   }
 
-  fetchData() {
-    firebase.firestore()
+  subscribe() {
+    const date = this.props.date;
+    const startDate = date.format('YYYY-MM-DD');
+    const endDate = date.add(5, 'days').format('YYYY-MM-DD');
+    const unsubscriber = firebase.firestore()
       .collection('order')
-      .get()
-      .then((response) => {
+      .where('date', '>=', startDate)
+      .where('date', '<=', endDate)
+      .onSnapshot((response) => {
         let newTableData = {};
         response.forEach((doc) => {
-          newTableData[doc.id] = [];
+          const order: OrderType = doc.data();
+          if (this.props.type === order.type) {
+            const userId = order.userId;
+            if (!newTableData.hasOwnProperty(userId)) {
+              newTableData[userId] = [null, null, null, null, null];
+            }
+            const day = moment(order.date).diff(startDate, 'days');
+            newTableData[userId][day] = order.menuId;
+          }
         });
         this.setState({
           tableData: newTableData,
         });
-        response.forEach((doc) => {
-          this.requestUserData(doc.id);
-        });
       });
+    this.setState({
+      unsubscriber: unsubscriber,
+    });
   }
 
   componentDidMount() {
-    this.fetchData();
+    this.subscribe();
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
   }
 
   componentDidUpdate(prevProps: Props, prevState: State) {
     if (prevProps.type !== this.props.type ||
         prevProps.date !== this.props.date) {
-      this.fetchData();
+      this.unsubscribe();
+      this.subscribe();
     }
   }
 

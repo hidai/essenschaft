@@ -10,115 +10,101 @@ type Props = {
 };
 
 type State = {
-  menuCount: {
+  db: {
     [date: moment]: {
-      [menuId: string]: {
-        lunch: number,
-        dinner: number,
+      [type: string]: {
+        [menuId: string]: number,
       },
     },
   },
+  unsubscriber: Function,
 };
 
 class OrderSheetToVendor extends Component<Props, State> {
   state = {
-    menuCount: {},
+    db: {},
+    unsubscriber: undefined,
   }
 
-  // This is a copy from ListView.js!!!!!!!!!!!
-  requestMenuIdByDate(user: string,
-                      type: 'lunch' | 'dinner',
-                      date: moment): Promise<?string> {
-    console.log(`requestMenuIdByDate(${user}, ${type}, ${date.format('YYYY-MM-DD')})`);
-    return firebase.firestore()
+  subscribe() {
+    const date = this.props.date;
+    const startDate = date.format('YYYY-MM-DD');
+    const endDate = date.add(5, 'days').format('YYYY-MM-DD');
+    const unsubscriber = firebase.firestore()
       .collection('order')
-      .doc(user)
-      .collection(date.format('YYYY-MM') + '-' + type)
-      .get()
-      .then((response) => {
-        const day = date.format('DD');
-        for (let doc of response.docs) {
-          if (doc.id === day) {
-            return new Promise((resolve, reject) => {
-              resolve(doc.data().menuId);
-            });
+      .where('date', '>=', startDate)
+      .where('date', '<=', endDate)
+      .onSnapshot((response) => {
+        let newDb = {};
+        response.forEach((doc) => {
+          const order: OrderType = doc.data();
+          const date = order.date;
+          const menuId = order.menuId;
+          const type = order.type;
+          if (!newDb.hasOwnProperty(date)) {
+            newDb[date] = {};
           }
-        }
-        return Promise.resolve();
+          if (!newDb[date].hasOwnProperty(type)) {
+            newDb[date][type] = {};
+          }
+          if (!newDb[date][type].hasOwnProperty(menuId)) {
+            newDb[date][type][menuId] = 0;
+          }
+          newDb[date][type][menuId]++;
+        });
+        this.setState({
+          db: newDb,
+        });
       });
+    this.setState({
+      unsubscriber: unsubscriber,
+    });
   }
 
-  requestUserData(user: string) {
-    console.log(`requestUserData(${user})`);
-    for (let i = 0; i < 5; i++) {
-      const day = this.props.date.clone().add(i, 'days');
-      ['lunch', 'dinner'].forEach((type) => {
-        this.requestMenuIdByDate(user, type, day)
-          .then((menuId) => {
-            if (!menuId) {
-              return;
-            }
-            this.setState((prevState) => {
-              let newMenuCount = prevState.menuCount;
-              if (!newMenuCount.hasOwnProperty(day)) {
-                newMenuCount[day] = {};
-              }
-              if (!newMenuCount[day].hasOwnProperty(menuId)) {
-                newMenuCount[day][menuId] = {
-                  lunch: 0,
-                  dinner: 0,
-                };
-              }
-              newMenuCount[day][menuId][type]++;
-              return {
-                menuCount: newMenuCount,
-              }
-            });
-          });
-      });
+  unsubscribe() {
+    if (this.state.unsubscriber) {
+      this.state.unsubscriber();
     }
   }
 
-  fetchData() {
-    firebase.firestore()
-      .collection('order')
-      .get()
-      .then((response) => {
-        this.setState({
-          menuCount: {},
-        });
-        response.forEach((doc) => {
-          this.requestUserData(doc.id);
-        });
-      });
+  componentDidMount() {
+    this.subscribe();
   }
 
-  componentDidMount() {
-    this.fetchData();
+  componentWillUnmount() {
+    this.unsubscribe();
   }
 
   componentDidUpdate(prevProps: Props, prevState: State) {
     if (prevProps.date !== this.props.date) {
-      this.fetchData();
+      this.unsubscribe();
+      this.subscribe();
     }
   }
 
   render() {
+    const db = this.state.db;
     return (
       <div>
         {
-          Object.keys(this.state.menuCount).map((date) => (
-            <Paper key={date}>
-              <h2>{moment(date).format('l')}</h2>
-              {
-                Object.keys(this.state.menuCount[date]).map((menuId) => (
-                  this.state.menuCount[date][menuId].lunch > 0 &&
-                  <div>
-                    {this.props.lookupMenuNameFromId(menuId)} x {this.state.menuCount[date][menuId].lunch}
-                  </div>
-                ))
-              }
-            </Paper>
+          Object.keys(db).sort().map((date) => (
+            Object.keys(db[date]).sort().reverse().map((type) => (
+              <Paper
+                key={date}
+                style={{marginBottom: "1em"}}>
+                <h2>
+                  {moment(date).format('ll')} - {type}
+                </h2>
+                {
+                  Object.keys(db[date][type]).map((menuId) => (
+                    db[date][type][menuId] > 0 &&
+                    <div>
+                      {this.props.lookupMenuNameFromId(menuId)} x {db[date][type][menuId]}
+                    </div>
+                  ))
+                }
+              </Paper>
+            ))
           ))
         }
       </div>
