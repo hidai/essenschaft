@@ -9,7 +9,7 @@ import Dialog, {
 } from 'material-ui/Dialog';
 import IconDelete from 'material-ui-icons/Delete';
 import moment from 'moment';
-import MenuPage from './MenuPage';
+import MenuSelector from './MenuSelector';
 import type { MenuType } from './MenuType';
 
 type Props = {
@@ -34,7 +34,7 @@ class MenuChooseDialog extends Component<Props> {
               Choose menu for {this.props.date.format('YYYY-MM-DD')}
             </DialogTitle>
             <DialogContent>
-              <MenuPage
+              <MenuSelector
                 menuList={this.props.menuList}
                 editable={false}
                 handleMenuClick={this.props.handleSelect}

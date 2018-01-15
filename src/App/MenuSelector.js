@@ -23,7 +23,7 @@ type State = {
   sortOrder: 'Name' | 'NameRev' | 'Date' | 'DateRev',
 };
 
-class MenuPage extends Component<Props, State> {
+class MenuSelector extends Component<Props, State> {
   state = {
     gridCols: 2,
     sortOrder: 'Name',
@@ -162,4 +162,4 @@ class MenuPage extends Component<Props, State> {
   }
 }
 
-export default MenuPage;
+export default MenuSelector;
