@@ -81,14 +81,12 @@ class CalendarView extends Component<Props, State> {
       .where('userId', '==', this.props.user.email)
       .where('type', '==', this.props.type)
       .onSnapshot((response) => {
-        this.setState((prevState) => {
-          let newDb = prevState.db;
-          response.forEach((doc) => {
-            newDb[doc.data().date] = doc.data();
-          });
-          return {
-            db: newDb,
-          };
+        let newDb = {};
+        response.forEach((doc) => {
+          newDb[doc.data().date] = doc.data();
+        });
+        this.setState({
+          db: newDb,
         });
       });
     this.setState((prevState) => {
