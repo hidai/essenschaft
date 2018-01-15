@@ -90,7 +90,7 @@ class OrderSheetToVendor extends Component<Props, State> {
           Object.keys(db).sort().map((date) => (
             Object.keys(db[date]).sort().reverse().map((type) => (
               <Paper
-                key={date}
+                key={date + '-' + type}
                 style={{marginBottom: "1em"}}>
                 <h2>
                   {moment(date).format('ll')} - {type}
