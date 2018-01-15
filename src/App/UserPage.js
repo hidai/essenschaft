@@ -175,7 +175,6 @@ class UserPage extends Component<Props, State> {
             <PropsRoute
               path="/user/order2vendor"
               component={OrderSheetToVendorPage}
-              lookupMenuNameFromId={this.props.lookupMenuNameFromId}
               lookupMenuFromId={this.props.lookupMenuFromId}
             />
           </Switch>
