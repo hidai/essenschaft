@@ -165,7 +165,7 @@ class UserPage extends Component<Props, State> {
               menuList={this.props.menuList}
               vendorList={this.props.vendorList}
               editable={true}
-              handleMenuClick={() => {}}
+              lookupMenuFromId={this.props.lookupMenuFromId}
             />
             <PropsRoute
               path="/user/list"

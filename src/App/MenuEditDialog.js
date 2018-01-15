@@ -17,6 +17,7 @@ import type { MenuType } from './MenuType';
 
 type Props = {
   open: boolean,
+  menu: ?MenuType,
   vendorList: Array<string>,
   handleClose: Function,
   fullScreen: boolean,  // from withMobileDialog
@@ -31,22 +32,42 @@ type State = {
 
 class MenuEditDialog extends Component<Props, State> {
   state = {
-    name: '',
-    imgurl: '',
-    vendor: this.props.vendorList.length > 0
-      ? this.props.vendorList[0]
+    name: this.props.menu
+      ? this.props.menu.name
       : '',
-    lunchOnly: false,
+    imgurl: this.props.menu
+      ? this.props.menu.imgurl
+      : '',
+    vendor: this.props.menu
+      ? this.props.menu.vendor
+      : this.props.vendorList.length > 0
+        ? this.props.vendorList[0]
+        : '',
+    lunchOnly: this.props.menu
+      ? this.props.menu.lunchOnly
+      : false,
   }
 
-  clearFields() {
-    this.setState({
-      name: '',
-      imgurl: '',
-      vendor: '',
-      lunchOnly: false,
-    });
-  };
+  componentDidUpdate(prevProps: Props, prevState: State) {
+    if (!prevProps.menu && this.props.menu) {
+      this.setState({
+        name: this.props.menu.name || '',
+        imgurl: this.props.menu.imgurl || '',
+        vendor: this.props.menu.vendor || '',
+        lunchOnly: this.props.menu.lunchOnly || false,
+      });
+    }
+    if (prevProps.menu && !this.props.menu) {
+      this.setState({
+        name: '',
+        imgurl: '',
+        vendor: this.props.vendorList.length > 0
+          ? this.props.vendorList[0]
+          : '',
+        lunchOnly: false,
+      });
+    }
+  }
 
   updateName = (event: Object) => {
     const value: string = event.target.value;
@@ -68,18 +89,34 @@ class MenuEditDialog extends Component<Props, State> {
     this.setState({lunchOnly: value});
   };
 
-  onAddButtonClicked = () => {
-    let doc: MenuType = {
+  buildMenuDoc(): MenuType {
+    const doc: MenuType = {
       name: this.state.name,
       imgurl: this.state.imgurl,
       vendor: this.state.vendor,
       lunchOnly: this.state.lunchOnly,
       lastUpdate: new Date(),
     };
-    firebase.firestore().collection('menu').add(doc)
-      .then(function(docRef) {
-        console.log('Document written with ID: ', docRef.id);
-      })
+    return doc;
+  }
+
+  onSubmitButtonClicked() {
+    const doc = this.buildMenuDoc();
+    firebase.firestore()
+      .collection('menu')
+      .doc(this.props.menu.id)
+      .set(doc)
+      .catch(function(error) {
+        console.error('Error adding document: ', error);
+      });
+    this.props.handleClose();
+  };
+
+  onAddButtonClicked() {
+    const doc = this.buildMenuDoc();
+    firebase.firestore()
+      .collection('menu')
+      .add(doc)
       .catch(function(error) {
         console.error('Error adding document: ', error);
       });
@@ -93,7 +130,13 @@ class MenuEditDialog extends Component<Props, State> {
             fullScreen={this.props.fullScreen}
             open={this.props.open}
           >
-            <DialogTitle>Add new menu item</DialogTitle>
+            <DialogTitle>
+              {
+                this.props.menu
+                  ? 'Edit new menu item'
+                  : 'Add new menu item'
+              }
+            </DialogTitle>
             <DialogContent>
               <TextField
                 label="Menu Name"
@@ -139,12 +182,24 @@ class MenuEditDialog extends Component<Props, State> {
                 color="primary">
                 Cancel
               </Button>
-              <Button
-                onClick={this.onAddButtonClicked}
-                disabled={!this.state.name}
-                color="primary">
-                Add
-              </Button>
+              {
+                this.props.menu &&
+                  <Button
+                    onClick={this.onSubmitButtonClicked.bind(this)}
+                    disabled={!this.state.name || !this.state.vendor}
+                    color="primary">
+                    Submit
+                  </Button>
+              }
+              {
+                !this.props.menu &&
+                  <Button
+                    onClick={this.onAddButtonClicked.bind(this)}
+                    disabled={!this.state.name || !this.state.vendor}
+                    color="primary">
+                    Add
+                  </Button>
+              }
             </DialogActions>
           </Dialog>
         </div>

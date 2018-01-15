@@ -16,6 +16,7 @@ type Props = {
   vendorList: Array<string>,
   editable: boolean,
   handleMenuClick: Function,
+  handleEditClick: Function,
 };
 
 type State = {
@@ -97,7 +98,9 @@ class MenuSelector extends Component<Props, State> {
               subtitle={menu.vendor}
               actionIcon={
                 this.props.editable &&
-                <IconButton style={{color: "white"}}>
+                <IconButton
+                  onClick={this.props.handleEditClick.bind(null, menu.id)}
+                  style={{color: "white"}}>
                   <IconModeEdit/>
                 </IconButton>
               }>
