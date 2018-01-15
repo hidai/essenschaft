@@ -44,7 +44,7 @@ class MenuPage extends Component<Props, State> {
 
   render() {
     return (
-        <div>
+        <div style={{marginTop: "4rem"}}>
           <MenuSelector
             menuList={this.props.menuList}
             vendorList={this.props.vendorList}

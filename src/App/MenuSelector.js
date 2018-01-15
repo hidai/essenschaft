@@ -2,12 +2,12 @@
 import React, { Component } from 'react';
 import { GridList, GridListTile, GridListTileBar } from 'material-ui/GridList';
 import IconButton from 'material-ui/IconButton';
-import Paper from 'material-ui/Paper';
+import TextField from 'material-ui/TextField';
+import { MenuItem } from 'material-ui/Menu';
 import AddMenuButton from './AddMenuButton';
 import Button from 'material-ui/Button';
 import IconZoomIn from 'material-ui-icons/ZoomIn';
 import IconZoomOut from 'material-ui-icons/ZoomOut';
-import IconSort from 'material-ui-icons/Sort';
 import IconModeEdit from 'material-ui-icons/ModeEdit';
 import type { MenuType } from './MenuType';
 
@@ -21,7 +21,7 @@ type Props = {
 
 type State = {
   gridCols: number,
-  sortOrder: 'Name' | 'NameRev' | 'Date' | 'DateRev',
+  sortOrder: 'Name' | 'VendorName' | 'Date' | 'DateRev',
 };
 
 class MenuSelector extends Component<Props, State> {
@@ -38,22 +38,10 @@ class MenuSelector extends Component<Props, State> {
     });
   }
 
-  changeToNextSortOrder() {
-    this.setState((prevState: State, props: Props): Object => {
-      switch (prevState.sortOrder) {
-        case 'Name':
-          return { sortOrder: 'NameRev' };
-        case 'NameRev':
-          return { sortOrder: 'Date' };
-        case 'Date':
-          return { sortOrder: 'DateRev' };
-        case 'DateRev':
-          return { sortOrder: 'Name' };
-        default:
-          console.warn('Invalid sortOrder: ' +
-                       JSON.stringify(prevState));
-          return { sortOrder: 'Name' };
-      }
+  updateSortOrder(event: Object) {
+    const value: string = event.target.value;
+    this.setState({
+      sortOrder: value,
     });
   }
 
@@ -65,20 +53,23 @@ class MenuSelector extends Component<Props, State> {
           return a.name === b.name ? 0 :
                  a.name < b.name ? -1 : 1;
         };
-      case 'NameRev':
+      case 'VendorName':
         return (a: MenuType, b: MenuType): number => {
-          return a.name === b.name ? 0 :
-                 a.name < b.name ? 1 : -1;
+          if (a.vendor === b.vendor) {
+            return a.name === b.name ? 0 :
+                   a.name < b.name ? 1 : -1;
+          }
+          return a.vendor < b.vendor ? 1 : -1;
         };
       case 'Date':
         return (a: MenuType, b: MenuType): number => {
           return a.lastUpdate === b.lastUpdate ? 0 :
-                 a.lastUpdate < b.lastUpdate ? -1 : 1;
+                 a.lastUpdate < b.lastUpdate ? 1 : -1;
         };
       case 'DateRev':
         return (a: MenuType, b: MenuType): number => {
           return a.lastUpdate === b.lastUpdate ? 0 :
-                 a.lastUpdate < b.lastUpdate ? 1 : -1;
+                 a.lastUpdate < b.lastUpdate ? -1 : 1;
         };
     }
   }
@@ -122,13 +113,25 @@ class MenuSelector extends Component<Props, State> {
     };
     return (
         <div>
-          <Paper>
+          <div>
+            <TextField
+              select
+              label="Sort by"
+              value={this.state.sortOrder}
+              InputProps={{
+                onChange: this.updateSortOrder.bind(this)
+              }}>
+              <MenuItem value="Name">Name</MenuItem>
+              <MenuItem value="VendorName">Vendor | Name</MenuItem>
+              <MenuItem value="Date">Last update date (new -> old)</MenuItem>
+              <MenuItem value="DateRev">Last update date (old -> new)</MenuItem>
+            </TextField>
             <GridList cols={this.state.gridCols}>
               {
                 list.length > 0 ? list : <span>Loading...</span>
               }
             </GridList>
-          </Paper>
+          </div>
 
           <div style={fabContainerStyle}>
             {
@@ -151,13 +154,6 @@ class MenuSelector extends Component<Props, State> {
               onClick={this.plusGridCols.bind(this, +1)}
               style={fabStyle}>
               <IconZoomOut />
-            </Button>
-            <Button
-              fab
-              mini={true}
-              onClick={this.changeToNextSortOrder.bind(this)}
-              style={fabStyle}>
-              <IconSort />
             </Button>
           </div>
         </div>
