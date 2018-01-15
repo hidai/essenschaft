@@ -162,6 +162,7 @@ class UserPage extends Component<Props, State> {
             <PropsRoute
               path="/user/menu"
               component={MenuPage}
+              user={this.props.user}
               menuList={this.props.menuList}
               vendorList={this.props.vendorList}
               editable={true}

@@ -50,12 +50,13 @@ class AppRouterBase extends Component<Props, State> {
       let menuList: Array<MenuType> = [];
       response.forEach((doc) => {
         menuList.push({
-          id:         doc.id,
-          name:       doc.data().name,
-          imgurl:     doc.data().imgurl,
-          vendor:     doc.data().vendor,
-          lunchOnly:  doc.data().lunchOnly,
-          lastUpdate: doc.data().lastUpdate,
+          id:            doc.id,
+          name:          doc.data().name,
+          imgurl:        doc.data().imgurl,
+          vendor:        doc.data().vendor,
+          lunchOnly:     doc.data().lunchOnly,
+          lastUpdate:    doc.data().lastUpdate,
+          lastUpdatedBy: doc.data().lastUpdatedBy,
         });
       });
       this.setState({

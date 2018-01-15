@@ -7,4 +7,5 @@ export type MenuType = {
   vendor: string,
   lunchOnly?: boolean,
   lastUpdate: Date,
+  lastUpdatedBy: string,  // user name
 }

@@ -14,10 +14,12 @@ import Checkbox from 'material-ui/Checkbox';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 import type { MenuType } from './MenuType';
+import moment from 'moment';
 
 type Props = {
   open: boolean,
   menu: ?MenuType,
+  user: ?Object,
   vendorList: Array<string>,
   handleClose: Function,
   fullScreen: boolean,  // from withMobileDialog
@@ -96,6 +98,7 @@ class MenuEditDialog extends Component<Props, State> {
       vendor: this.state.vendor,
       lunchOnly: this.state.lunchOnly,
       lastUpdate: new Date(),
+      lastUpdatedBy: this.props.user ? this.props.user.displayName : '(unknown)',
     };
     return doc;
   }
@@ -175,6 +178,14 @@ class MenuEditDialog extends Component<Props, State> {
                 }
                 label="Lunch Only"
               />
+              {
+                this.props.menu &&
+                this.props.menu.lastUpdate &&
+                this.props.menu.lastUpdatedBy &&
+                  <div style={{color: "lightGray"}}>
+                    Last updated by {this.props.menu.lastUpdatedBy} | {moment(this.props.menu.lastUpdate).format('lll')}
+                  </div>
+              }
             </DialogContent>
             <DialogActions>
               <Button

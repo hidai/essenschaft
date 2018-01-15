@@ -5,6 +5,7 @@ import MenuEditDialog from './MenuEditDialog';
 import type { MenuType } from './MenuType';
 
 type Props = {
+  user: ?Object,
   menuList: Array<MenuType>,
   vendorList: Array<string>,
   editable: boolean,
@@ -54,6 +55,7 @@ class MenuPage extends Component<Props, State> {
           <MenuEditDialog
             open={this.state.open}
             menu={this.state.menu}
+            user={this.props.user}
             vendorList={this.props.vendorList}
             handleClose={this.handleClose.bind(this)}>
           </MenuEditDialog>
