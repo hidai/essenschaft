@@ -1,12 +1,14 @@
 // @flow
 import React, { Component } from 'react';
 import { GridList, GridListTile, GridListTileBar } from 'material-ui/GridList';
+import IconButton from 'material-ui/IconButton';
 import Paper from 'material-ui/Paper';
 import AddMenuDialog from './AddMenuDialog';
 import Button from 'material-ui/Button';
 import IconZoomIn from 'material-ui-icons/ZoomIn';
 import IconZoomOut from 'material-ui-icons/ZoomOut';
 import IconSort from 'material-ui-icons/Sort';
+import IconModeEdit from 'material-ui-icons/ModeEdit';
 import type { MenuType } from './MenuType';
 
 type Props = {
@@ -90,7 +92,15 @@ class MenuPage extends Component<Props, State> {
             key={menu.id}
             onClick={this.props.handleMenuClick.bind(null, menu.id)}>
             <img src={menu.imgurl} alt={menu.name}/>
-            <GridListTileBar title={menu.name} subtitle="菱膳">
+            <GridListTileBar
+              title={menu.name}
+              subtitle={menu.vendor}
+              actionIcon={
+                this.props.editable &&
+                <IconButton style={{color: "white"}}>
+                  <IconModeEdit/>
+                </IconButton>
+              }>
             </GridListTileBar>
           </GridListTile>
       );
