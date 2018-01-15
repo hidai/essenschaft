@@ -29,7 +29,7 @@ type State = {
   lunchOnly: boolean,
 };
 
-class AddMenuDialog extends Component<Props, State> {
+class MenuEditDialog extends Component<Props, State> {
   state = {
     name: '',
     imgurl: '',
@@ -152,4 +152,4 @@ class AddMenuDialog extends Component<Props, State> {
   }
 }
 
-export default withMobileDialog()(AddMenuDialog);
+export default withMobileDialog()(MenuEditDialog);

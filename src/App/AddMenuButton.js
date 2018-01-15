@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import Button from 'material-ui/Button';
 import IconAdd from 'material-ui-icons/Add';
-import AddMenuDialog from './AddMenuDialog';
+import MenuEditDialog from './MenuEditDialog';
 
 type Props = {
   fabStyle: Object,
@@ -37,11 +37,11 @@ class AddMenuButton extends Component<Props, State> {
   render() {
     return (
         <div>
-          <AddMenuDialog
+          <MenuEditDialog
             open={this.state.open}
             vendorList={this.props.vendorList}
             handleClose={this.handleClose.bind(this)}>
-          </AddMenuDialog>
+          </MenuEditDialog>
           <Button
             fab
             color="accent"
