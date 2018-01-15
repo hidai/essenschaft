@@ -6,7 +6,7 @@ import moment from 'moment';
 import OrderSheetToVendor from './OrderSheetToVendor';
 
 type Props = {
-  lookupMenuNameFromId: Function,
+  lookupMenuFromId: Function,
 };
 
 type State = {
@@ -57,7 +57,7 @@ class OrderSheetToVendorPage extends Component<Props, State> {
           </div>
           <OrderSheetToVendor
             date={this.getMomentDateFromWeekId(this.state.weekId)}
-            lookupMenuNameFromId={this.props.lookupMenuNameFromId}
+            lookupMenuFromId={this.props.lookupMenuFromId}
         />
         </div>
      );

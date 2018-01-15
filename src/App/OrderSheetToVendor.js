@@ -6,14 +6,16 @@ import Paper from 'material-ui/Paper';
 
 type Props = {
   date: moment,
-  lookupMenuNameFromId: Function,
+  lookupMenuFromId: Function,
 };
 
 type State = {
   db: {
-    [date: moment]: {
-      [type: string]: {
-        [menuId: string]: number,
+    [vendor: string]: {
+      [date: moment]: {
+        [type: string]: {
+          [name: string]: number,
+        },
       },
     },
   },
@@ -38,19 +40,24 @@ class OrderSheetToVendor extends Component<Props, State> {
         let newDb = {};
         response.forEach((doc) => {
           const order: OrderType = doc.data();
+          const menu = this.props.lookupMenuFromId(order.menuId);
+          const vendor = menu.vendor;
           const date = order.date;
-          const menuId = order.menuId;
+          const name = menu.name;
           const type = order.type;
-          if (!newDb.hasOwnProperty(date)) {
-            newDb[date] = {};
+          if (!newDb.hasOwnProperty(vendor)) {
+            newDb[vendor] = {};
           }
-          if (!newDb[date].hasOwnProperty(type)) {
-            newDb[date][type] = {};
+          if (!newDb[vendor].hasOwnProperty(date)) {
+            newDb[vendor][date] = {};
           }
-          if (!newDb[date][type].hasOwnProperty(menuId)) {
-            newDb[date][type][menuId] = 0;
+          if (!newDb[vendor][date].hasOwnProperty(type)) {
+            newDb[vendor][date][type] = {};
           }
-          newDb[date][type][menuId]++;
+          if (!newDb[vendor][date][type].hasOwnProperty(name)) {
+            newDb[vendor][date][type][name] = 0;
+          }
+          newDb[vendor][date][type][name]++;
         });
         this.setState({
           db: newDb,
@@ -87,24 +94,31 @@ class OrderSheetToVendor extends Component<Props, State> {
     return (
       <div>
         {
-          Object.keys(db).sort().map((date) => (
-            Object.keys(db[date]).sort().reverse().map((type) => (
-              <Paper
-                key={date + '-' + type}
-                style={{marginBottom: "1em"}}>
-                <h2>
-                  {moment(date).format('ll')} - {type}
-                </h2>
-                {
-                  Object.keys(db[date][type]).map((menuId) => (
-                    db[date][type][menuId] > 0 &&
-                    <div>
-                      {this.props.lookupMenuNameFromId(menuId)} x {db[date][type][menuId]}
-                    </div>
+          Object.keys(db).sort().map((vendor) => (
+            <div>
+              <h2>{vendor}</h2>
+              {
+                Object.keys(db[vendor]).sort().map((date) => (
+                  Object.keys(db[vendor][date]).sort().reverse().map((type) => (
+                    <Paper
+                      key={vendor + '-' + date + '-' + type}
+                      style={{marginBottom: "1em"}}>
+                      <h2>
+                        {moment(date).format('ll')} - {type}
+                      </h2>
+                      {
+                        Object.keys(db[vendor][date][type]).map((name) => (
+                          db[vendor][date][type][name] > 0 &&
+                          <div>
+                            {name} x {db[vendor][date][type][name]}
+                          </div>
+                        ))
+                      }
+                    </Paper>
                   ))
-                }
-              </Paper>
-            ))
+                ))
+              }
+            </div>
           ))
         }
       </div>

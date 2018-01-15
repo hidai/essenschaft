@@ -23,7 +23,7 @@ type Props = {
   user: ?Object,
   menuList: Array<MenuType>,
   vendorList: Array<string>,
-  lookupMenuromId: Function,
+  lookupMenuFromId: Function,
   lookupMenuNameFromId: Function,
 };
 
@@ -176,6 +176,7 @@ class UserPage extends Component<Props, State> {
               path="/user/order2vendor"
               component={OrderSheetToVendorPage}
               lookupMenuNameFromId={this.props.lookupMenuNameFromId}
+              lookupMenuFromId={this.props.lookupMenuFromId}
             />
           </Switch>
 
