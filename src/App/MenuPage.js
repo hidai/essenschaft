@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { GridList, GridListTile, GridListTileBar } from 'material-ui/GridList';
 import IconButton from 'material-ui/IconButton';
 import Paper from 'material-ui/Paper';
-import AddMenuDialog from './AddMenuDialog';
+import AddMenuButton from './AddMenuButton';
 import Button from 'material-ui/Button';
 import IconZoomIn from 'material-ui-icons/ZoomIn';
 import IconZoomOut from 'material-ui-icons/ZoomOut';
@@ -130,7 +130,7 @@ class MenuPage extends Component<Props, State> {
           <div style={fabContainerStyle}>
             {
               this.props.editable &&
-                <AddMenuDialog
+                <AddMenuButton
                   fabStyle={fabStyle}
                   vendorList={this.props.vendorList} />
             }

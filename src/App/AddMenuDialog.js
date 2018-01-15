@@ -1,7 +1,6 @@
 // @flow
 import React, { Component } from 'react';
 import Button from 'material-ui/Button';
-import IconAdd from 'material-ui-icons/Add';
 import Dialog, {
   DialogActions,
   DialogContent,
@@ -17,13 +16,13 @@ import 'firebase/firestore';
 import type { MenuType } from './MenuType';
 
 type Props = {
-  fabStyle: Object,
+  open: boolean,
   vendorList: Array<string>,
+  handleClose: Function,
   fullScreen: boolean,  // from withMobileDialog
 };
 
 type State = {
-  open: boolean,
   name: string,
   imgurl: string,
   vendor: string,
@@ -32,33 +31,21 @@ type State = {
 
 class AddMenuDialog extends Component<Props, State> {
   state = {
-    open: false,
     name: '',
     imgurl: '',
-    vendor: this.props.vendorList && this.props.vendorList.length > 0
+    vendor: this.props.vendorList.length > 0
       ? this.props.vendorList[0]
       : '',
     lunchOnly: false,
   }
 
-  handleOpen() {
-    this.setState((prevState) => {
-      if (prevState.open) {
-        return {};
-      } else {
-        return {
-          open: true,
-          name: '',
-          imgurl: '',
-          vendor: '',
-          lunchOnly: false,
-        };
-      }
+  clearFields() {
+    this.setState({
+      name: '',
+      imgurl: '',
+      vendor: '',
+      lunchOnly: false,
     });
-  };
-
-  handleClose() {
-    this.setState({open: false});
   };
 
   updateName = (event: Object) => {
@@ -96,7 +83,7 @@ class AddMenuDialog extends Component<Props, State> {
       .catch(function(error) {
         console.error('Error adding document: ', error);
       });
-    this.handleClose();
+    this.props.handleClose();
   };
 
   render() {
@@ -104,7 +91,7 @@ class AddMenuDialog extends Component<Props, State> {
         <div>
           <Dialog
             fullScreen={this.props.fullScreen}
-            open={this.state.open}
+            open={this.props.open}
           >
             <DialogTitle>Add new menu item</DialogTitle>
             <DialogContent>
@@ -148,7 +135,7 @@ class AddMenuDialog extends Component<Props, State> {
             </DialogContent>
             <DialogActions>
               <Button
-                onClick={this.handleClose.bind(this)}
+                onClick={this.props.handleClose}
                 color="primary">
                 Cancel
               </Button>
@@ -160,13 +147,6 @@ class AddMenuDialog extends Component<Props, State> {
               </Button>
             </DialogActions>
           </Dialog>
-          <Button
-            fab
-            color="accent"
-            style={this.props.fabStyle}
-            onClick={this.handleOpen.bind(this)}>
-            <IconAdd />
-          </Button>
         </div>
     );
   }
