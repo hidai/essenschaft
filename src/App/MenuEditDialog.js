@@ -191,6 +191,25 @@ class MenuEditDialog extends Component<Props, State> {
                     Last updated by {this.props.menu.lastUpdatedBy} | {moment(this.props.menu.lastUpdate).format('lll')}
                   </div>
               }
+              {
+                this.state.imgurl
+                  ?
+                    <div>
+                      <img
+                        src={this.state.imgurl}
+                        alt="Preview"
+                        style={{
+                          maxWidth: '100px',
+                          maxHeight: '100px',
+                        }} />
+                    </div>
+                  :
+                    <div>
+                      <a href={'http://www.google.com/search?q=' + this.state.name + ' ' + this.state.vendor} target="_blank">
+                        Search "{this.state.name} {this.state.vendor}" in new tab
+                      </a>
+                    </div>
+              }
             </DialogContent>
             <DialogActions>
               <Button
