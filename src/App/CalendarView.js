@@ -41,6 +41,7 @@ const customDayRenderer = (lookupMenuFromId: Function,
 type Props = {
   user: { email: string },
   menuList: Array<MenuType>,
+  vendorList: Array<string>,
   type: 'lunch' | 'dinner',
   lookupMenuFromId: Function,
 };
@@ -237,6 +238,7 @@ class CalendarView extends Component<Props, State> {
                   open={true}
                   date={this.state.menuChooseDialogDate}
                   menuList={this.props.menuList}
+                  vendorList={this.props.vendorList}
                   handleSelect={this.handleMenuChooseDialogSelect.bind(this)}
                   handleDelete={this.handleMenuChooseDialogDelete.bind(this)}
                   handleClose={this.handleMenuChooseDialogClose.bind(this)} />

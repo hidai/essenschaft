@@ -4,6 +4,7 @@ import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Ta
 import Paper from 'material-ui/Paper';
 import moment from 'moment';
 import * as firebase from 'firebase';
+import type { OrderType } from './OrderType';
 
 type Props = {
   date: moment,
@@ -13,7 +14,7 @@ type Props = {
 
 type State = {
   tableData: { [userId: string]: Array<?string> },
-  unsubscriber: Function,
+  unsubscriber: ?Function,
 };
 
 class ListView extends Component<Props, State> {

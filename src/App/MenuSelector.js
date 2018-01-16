@@ -19,9 +19,11 @@ type Props = {
   handleEditClick: Function,
 };
 
+type SortOrder = 'Name' | 'VendorName' | 'Date' | 'DateRev';
+
 type State = {
   gridCols: number,
-  sortOrder: 'Name' | 'VendorName' | 'Date' | 'DateRev',
+  sortOrder: SortOrder,
 };
 
 class MenuSelector extends Component<Props, State> {
@@ -39,7 +41,7 @@ class MenuSelector extends Component<Props, State> {
   }
 
   updateSortOrder(event: Object) {
-    const value: string = event.target.value;
+    const value: SortOrder = event.target.value;
     this.setState({
       sortOrder: value,
     });

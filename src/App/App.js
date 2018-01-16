@@ -83,7 +83,7 @@ class AppRouterBase extends Component<Props, State> {
     return this.state.user != null;
   }
 
-  lookupMenuFromId(id: string): MenuType {
+  lookupMenuFromId(id: string): ?MenuType {
     for (let i = 0; i < this.state.menuList.length; ++i) {
       const menu = this.state.menuList[i];
       if (menu.id === id) {

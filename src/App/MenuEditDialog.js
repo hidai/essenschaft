@@ -104,14 +104,19 @@ class MenuEditDialog extends Component<Props, State> {
   }
 
   onSubmitButtonClicked() {
-    const doc = this.buildMenuDoc();
-    firebase.firestore()
-      .collection('menu')
-      .doc(this.props.menu.id)
-      .set(doc)
-      .catch(function(error) {
-        console.error('Error adding document: ', error);
-      });
+    const menu = this.props.menu;
+    if (menu != null) {
+      const doc = this.buildMenuDoc();
+      firebase.firestore()
+        .collection('menu')
+        .doc(menu.id)
+        .set(doc)
+        .catch(function(error) {
+          console.error('Error adding document: ', error);
+        });
+    } else {
+      console.error(`props.menu.id is not available: ${JSON.stringify(this.props.menu)}`);
+    }
     this.props.handleClose();
   };
 

@@ -147,6 +147,7 @@ class UserPage extends Component<Props, State> {
               component={CalendarView}
               user={this.props.user}
               menuList={this.props.menuList}
+              vendorList={this.props.vendorList}
               lookupMenuFromId={this.props.lookupMenuFromId}
               type="lunch"
             />
@@ -156,6 +157,7 @@ class UserPage extends Component<Props, State> {
               component={CalendarView}
               user={this.props.user}
               menuList={this.props.menuList}
+              vendorList={this.props.vendorList}
               lookupMenuFromId={this.props.lookupMenuFromId}
               type="dinner"
             />

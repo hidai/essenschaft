@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import * as firebase from 'firebase';
 import Paper from 'material-ui/Paper';
+import type { OrderType } from './OrderType';
 
 type Props = {
   date: moment,
@@ -19,7 +20,7 @@ type State = {
       },
     },
   },
-  unsubscriber: Function,
+  unsubscriber: ?Function,
 };
 
 class OrderSheetToVendor extends Component<Props, State> {

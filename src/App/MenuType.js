@@ -5,7 +5,7 @@ export type MenuType = {
   name: string,
   imgurl: string,
   vendor: string,
-  lunchOnly?: boolean,
+  lunchOnly: boolean,
   lastUpdate: Date,
   lastUpdatedBy: string,  // user name
 }

@@ -17,6 +17,7 @@ type Props = {
   date: moment,
   fullScreen: boolean,  // from withMobileDialog
   menuList: Array<MenuType>,
+  vendorList: Array<string>,
   handleSelect: Function,
   handleDelete: Function,
   handleClose: Function,
@@ -36,8 +37,10 @@ class MenuChooseDialog extends Component<Props> {
             <DialogContent>
               <MenuSelector
                 menuList={this.props.menuList}
+                vendorList={this.props.vendorList}
                 editable={false}
                 handleMenuClick={this.props.handleSelect}
+                handleEditClick={() => {}}
               />
             </DialogContent>
             <DialogActions>
