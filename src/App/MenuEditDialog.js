@@ -141,7 +141,7 @@ class MenuEditDialog extends Component<Props, State> {
             <DialogTitle>
               {
                 this.props.menu
-                  ? 'Edit new menu item'
+                  ? 'Edit menu item'
                   : 'Add new menu item'
               }
             </DialogTitle>
