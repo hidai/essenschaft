@@ -15,14 +15,12 @@ type Props = {
 type State = {
   open: boolean,
   menu: ?MenuType,
-  dbg: string
 }
 
 class MenuPage extends Component<Props, State> {
   state = {
     open: false,
     menu: null,
-    dbg: '',
   }
 
   handleEditClick(menuId: string) {
@@ -30,7 +28,6 @@ class MenuPage extends Component<Props, State> {
     this.setState({
       open: true,
       menu: menu,
-      dbg: `menuId = ${menuId}\n${JSON.stringify(menu, null, 2)}`,
     });
   }
 
@@ -38,7 +35,6 @@ class MenuPage extends Component<Props, State> {
     this.setState({
       open: false,
       menu: null,
-      dbg: 'close',
     });
   };
 
@@ -59,9 +55,6 @@ class MenuPage extends Component<Props, State> {
             vendorList={this.props.vendorList}
             handleClose={this.handleClose.bind(this)}>
           </MenuEditDialog>
-          <pre>
-            {this.state.dbg}
-          </pre>
         </div>
     )
   }
