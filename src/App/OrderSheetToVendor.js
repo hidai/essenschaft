@@ -96,7 +96,7 @@ class OrderSheetToVendor extends Component<Props, State> {
       <div>
         {
           Object.keys(db).sort().map((vendor) => (
-            <div>
+            <div key={vendor}>
               <h2>{vendor}</h2>
               {
                 Object.keys(db[vendor]).sort().map((date) => (
@@ -110,7 +110,7 @@ class OrderSheetToVendor extends Component<Props, State> {
                       {
                         Object.keys(db[vendor][date][type]).map((name) => (
                           db[vendor][date][type][name] > 0 &&
-                          <div>
+                          <div key={vendor + '-' + date + '-' + type + '-' + name}>
                             {name} x {db[vendor][date][type][name]}
                           </div>
                         ))
