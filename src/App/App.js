@@ -39,10 +39,10 @@ class AppRouterBase extends Component<Props, State> {
       });
       if (user != null) {
         console.log('Signed-in: ' + JSON.stringify(user));
-        this.props.history.push("/user/lunch");
+        this.props.history.push('/user/lunch');
       } else {
         console.log('Signed-out: ' + JSON.stringify(user));
-        this.props.history.push("/");
+        this.props.history.push('/');
       }
     });
 
@@ -63,8 +63,7 @@ class AppRouterBase extends Component<Props, State> {
         menuList: menuList
       });
     };
-    firebase.firestore().collection("menu").get().then(updateMenuList);
-    firebase.firestore().collection("menu").onSnapshot(updateMenuList);
+    firebase.firestore().collection('menu').onSnapshot(updateMenuList);
 
     const updateVendorList = (response) => {
       let vendorList: Array<string> = [];
@@ -75,7 +74,6 @@ class AppRouterBase extends Component<Props, State> {
         vendorList: vendorList
       });
     };
-    firebase.firestore().collection('vendor').get().then(updateVendorList);
     firebase.firestore().collection('vendor').onSnapshot(updateVendorList);
   }
 
