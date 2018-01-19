@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import { GridList, GridListTile, GridListTileBar } from 'material-ui/GridList';
+import Subheader from 'material-ui/List/ListSubheader';
 import IconButton from 'material-ui/IconButton';
 import TextField from 'material-ui/TextField';
 import { MenuItem } from 'material-ui/Menu';
@@ -82,10 +83,22 @@ class MenuSelector extends Component<Props, State> {
         this.props.menuList[menuId]
     ));
     sortedMenuList.sort(this.getCompareFunc());
+    let prevVendor = '';
     sortedMenuList.forEach((menu) => {
+      if (this.state.sortOrder == 'VendorName' &&
+          prevVendor !== menu.vendor) {
+        list.push(
+            <GridListTile key={'v-' + menu.vendor}
+              cols={this.state.gridCols}
+              style={{background: 'white', height: 'auto'}}>
+              <Subheader component="div">{menu.vendor}</Subheader>
+            </GridListTile>
+        );
+        prevVendor = menu.vendor;
+      }
       let elem = (
           <GridListTile
-            key={menu.id}
+            key={'m-' + (menu.id || '?')}
             onClick={this.props.handleMenuClick.bind(null, menu.id)}>
             <img src={menu.gsimgurl} alt={menu.name}/>
             <GridListTileBar
