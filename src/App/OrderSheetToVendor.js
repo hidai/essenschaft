@@ -4,10 +4,11 @@ import moment from 'moment';
 import * as firebase from 'firebase';
 import Paper from 'material-ui/Paper';
 import type { OrderType } from './OrderType';
+import type { MenuType } from './MenuType';
 
 type Props = {
   date: moment,
-  lookupMenuFromId: Function,
+  menuList: {[menuId: string]: MenuType},
 };
 
 type State = {
@@ -41,7 +42,7 @@ class OrderSheetToVendor extends Component<Props, State> {
         let newDb = {};
         response.forEach((doc) => {
           const order: OrderType = doc.data();
-          const menu = this.props.lookupMenuFromId(order.menuId);
+          const menu = this.props.menuList[order.menuId];
           const vendor = menu.vendor;
           const date = order.date;
           const name = menu.name;

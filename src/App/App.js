@@ -16,14 +16,14 @@ type Props = {
 
 type State = {
   user: ?Object,
-  menuList: Array<MenuType>,
+  menuList: {[menuId: string]: MenuType},
   vendorList: Array<string>,
 };
 
 class AppRouterBase extends Component<Props, State> {
   state = {
     user: null,
-    menuList: [],
+    menuList: {},
     vendorList: [],
   }
 
@@ -47,9 +47,9 @@ class AppRouterBase extends Component<Props, State> {
     });
 
     const updateMenuList = (response) => {
-      let menuList: Array<MenuType> = [];
+      let menuList = {};
       response.forEach((doc) => {
-        menuList.push({
+        menuList[doc.id] = {
           id:            doc.id,
           name:          doc.data().name,
           imgurl:        doc.data().imgurl,
@@ -57,7 +57,7 @@ class AppRouterBase extends Component<Props, State> {
           lunchOnly:     doc.data().lunchOnly,
           lastUpdate:    doc.data().lastUpdate,
           lastUpdatedBy: doc.data().lastUpdatedBy,
-        });
+        };
       });
       this.setState({
         menuList: menuList
@@ -81,18 +81,8 @@ class AppRouterBase extends Component<Props, State> {
     return this.state.user != null;
   }
 
-  lookupMenuFromId(id: string): ?MenuType {
-    for (let i = 0; i < this.state.menuList.length; ++i) {
-      const menu = this.state.menuList[i];
-      if (menu.id === id) {
-        return menu;
-      }
-    }
-    return null;
-  }
-
   lookupMenuNameFromId(id: string): string {
-    const menu = this.lookupMenuFromId(id);
+    const menu = this.state.menuList[id];
     return menu ? menu.name : '(unknown)';
   }
 
@@ -113,7 +103,6 @@ class AppRouterBase extends Component<Props, State> {
           authorized={this.isAuthorized()}
           user={this.state.user}
           menuList={this.state.menuList}
-          lookupMenuFromId={this.lookupMenuFromId.bind(this)}
           lookupMenuNameFromId={this.lookupMenuNameFromId.bind(this)}
           vendorList={this.state.vendorList}
         />

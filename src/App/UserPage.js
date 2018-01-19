@@ -21,9 +21,8 @@ import './UserPage.css'
 
 type Props = {
   user: ?Object,
-  menuList: Array<MenuType>,
+  menuList: {[menuId: string]: MenuType},
   vendorList: Array<string>,
-  lookupMenuFromId: Function,
   lookupMenuNameFromId: Function,
 };
 
@@ -148,7 +147,6 @@ class UserPage extends Component<Props, State> {
               user={this.props.user}
               menuList={this.props.menuList}
               vendorList={this.props.vendorList}
-              lookupMenuFromId={this.props.lookupMenuFromId}
               type="lunch"
             />
             <PropsRoute
@@ -158,7 +156,6 @@ class UserPage extends Component<Props, State> {
               user={this.props.user}
               menuList={this.props.menuList}
               vendorList={this.props.vendorList}
-              lookupMenuFromId={this.props.lookupMenuFromId}
               type="dinner"
             />
             <PropsRoute
@@ -168,7 +165,6 @@ class UserPage extends Component<Props, State> {
               menuList={this.props.menuList}
               vendorList={this.props.vendorList}
               editable={true}
-              lookupMenuFromId={this.props.lookupMenuFromId}
             />
             <PropsRoute
               path="/user/list"
@@ -178,7 +174,7 @@ class UserPage extends Component<Props, State> {
             <PropsRoute
               path="/user/order2vendor"
               component={OrderSheetToVendorPage}
-              lookupMenuFromId={this.props.lookupMenuFromId}
+              menuList={this.props.menuList}
             />
           </Switch>
 

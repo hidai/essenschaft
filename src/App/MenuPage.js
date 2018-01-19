@@ -6,10 +6,9 @@ import type { MenuType } from './MenuType';
 
 type Props = {
   user: ?Object,
-  menuList: Array<MenuType>,
+  menuList: {[menuId: string]: MenuType},
   vendorList: Array<string>,
   editable: boolean,
-  lookupMenuFromId: Function,
 };
 
 type State = {
@@ -24,11 +23,15 @@ class MenuPage extends Component<Props, State> {
   }
 
   handleEditClick(menuId: string) {
-    const menu = this.props.lookupMenuFromId(menuId);
-    this.setState({
-      open: true,
-      menu: menu,
-    });
+    const menu = this.props.menuList[menuId];
+    if (menu != null) {
+      this.setState({
+        open: true,
+        menu: menu,
+      });
+    } else {
+      console.error(`${menuId} is missing in menuList`);
+    }
   }
 
   handleClose() {

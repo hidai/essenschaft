@@ -12,7 +12,7 @@ import IconModeEdit from 'material-ui-icons/ModeEdit';
 import type { MenuType } from './MenuType';
 
 type Props = {
-  menuList: Array<MenuType>,
+  menuList: {[menuId: string]: MenuType},
   vendorList: Array<string>,
   editable: boolean,
   handleMenuClick: Function,
@@ -78,7 +78,9 @@ class MenuSelector extends Component<Props, State> {
 
   render() {
     let list = [];
-    let sortedMenuList = this.props.menuList;
+    let sortedMenuList = Object.keys(this.props.menuList).map((menuId) => (
+        this.props.menuList[menuId]
+    ));
     sortedMenuList.sort(this.getCompareFunc());
     sortedMenuList.forEach((menu) => {
       let elem = (

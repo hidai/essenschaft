@@ -16,7 +16,7 @@ type Props = {
   open: boolean,
   date: moment,
   fullScreen: boolean,  // from withMobileDialog
-  menuList: Array<MenuType>,
+  menuList: {[menuId: string]: MenuType},
   vendorList: Array<string>,
   handleSelect: Function,
   handleDelete: Function,

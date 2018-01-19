@@ -4,9 +4,10 @@ import TextField from 'material-ui/TextField';
 import { MenuItem } from 'material-ui/Menu';
 import moment from 'moment';
 import OrderSheetToVendor from './OrderSheetToVendor';
+import type { MenuType } from './MenuType';
 
 type Props = {
-  lookupMenuFromId: Function,
+  menuList: {[menuId: string]: MenuType},
 };
 
 type State = {
@@ -57,7 +58,7 @@ class OrderSheetToVendorPage extends Component<Props, State> {
           </div>
           <OrderSheetToVendor
             date={this.getMomentDateFromWeekId(this.state.weekId)}
-            lookupMenuFromId={this.props.lookupMenuFromId}
+            menuList={this.props.menuList}
         />
         </div>
      );
