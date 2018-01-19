@@ -87,7 +87,7 @@ class MenuSelector extends Component<Props, State> {
           <GridListTile
             key={menu.id}
             onClick={this.props.handleMenuClick.bind(null, menu.id)}>
-            <img src={menu.imgurl} alt={menu.name}/>
+            <img src={menu.gsimgurl} alt={menu.name}/>
             <GridListTileBar
               title={menu.name}
               subtitle={menu.vendor}

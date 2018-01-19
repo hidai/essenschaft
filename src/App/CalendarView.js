@@ -22,7 +22,7 @@ const customDayRenderer = (menuList: {[menuId: string]: MenuType},
     const menu = menuList[db[key].menuId];
     if (menu) {
       name = menu.name;
-      imgurl = menu.imgurl;
+      imgurl = menu.gsimgurl;
     }
   }
   return (

@@ -58,6 +58,9 @@ class AppRouterBase extends Component<Props, State> {
           lastUpdate:    doc.data().lastUpdate,
           lastUpdatedBy: doc.data().lastUpdatedBy,
         };
+        setTimeout(() => {
+          this.loadCloudStorageUrl(doc.id, doc.data().name);
+        }, 1);
       });
       this.setState({
         menuList: menuList
@@ -75,6 +78,23 @@ class AppRouterBase extends Component<Props, State> {
       });
     };
     firebase.firestore().collection('vendor').onSnapshot(updateVendorList);
+  }
+
+  loadCloudStorageUrl(menuId: string, menuName: string) {
+    firebase.storage().ref(menuId).getDownloadURL()
+      .then((url) => {
+        console.info(`menuList[${menuId}].gsimgurl = "${url}"`);
+        this.setState((prevState) => {
+          const newMenuList = prevState.menuList;
+          newMenuList[menuId].gsimgurl = url;
+          return {
+            menuList: newMenuList,
+          };
+        });
+      })
+      .catch((e) => {
+        console.warn(`${e.message_} (name = ${menuName})`);
+      });
   }
 
   isAuthorized() {
