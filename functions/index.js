@@ -1,18 +1,25 @@
 const functions = require('firebase-functions');
 const gcs = require('@google-cloud/storage')();
-var rp = require('request-promise');
+const req = require('request-promise');
 
 const bucket_name = process.env.GCLOUD_PROJECT + '.appspot.com';
 
 const func = (event) => {
   const menu = event.data.data();
-  return rp({url: menu.imgurl, encoding: null})
-    .then((body) => {
-      const bucket = gcs.bucket(bucket_name);
-      const gcsname = event.params.menuId + '.jpg';
-      const file = bucket.file(gcsname);
-      return file.save(body, {metadata: {contentType: 'image/jpeg'}});
-    });
+  return req({
+             url: menu.imgurl,
+             encoding: null,
+             resolveWithFullResponse: true,
+  }).then((response) => {
+    return gcs
+      .bucket(bucket_name)
+      .file(event.params.menuId)
+      .save(response.body, {
+        metadata: {
+          contentType: response.headers['content-type'],
+        },
+      });
+  });
 };
 exports.createMenu = functions.firestore.document('menu/{menuId}').onCreate(func);
 exports.updateMenu = functions.firestore.document('menu/{menuId}').onUpdate(func);
