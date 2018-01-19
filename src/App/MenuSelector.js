@@ -137,7 +137,8 @@ class MenuSelector extends Component<Props, State> {
               value={this.state.sortOrder}
               InputProps={{
                 onChange: this.updateSortOrder.bind(this)
-              }}>
+              }}
+              style={{margin: '0.5em'}}>
               <MenuItem value="Name">Name</MenuItem>
               <MenuItem value="VendorName">Vendor | Name</MenuItem>
               <MenuItem value="Date">Last update date (new -> old)</MenuItem>

@@ -30,7 +30,7 @@ class ListView extends Component<Props, State> {
   }
 
   subscribe() {
-    const date = this.props.date;
+    const date = this.props.date.clone();
     const startDate = date.format('YYYY-MM-DD');
     const endDate = date.add(5, 'days').format('YYYY-MM-DD');
     const unsubscriber = firebase.firestore()
