@@ -14,15 +14,15 @@ import type { OrderType } from './OrderType';
 const customDayRenderer = (menuList: {[menuId: string]: MenuType},
                            db: { [day: string]: OrderType },
                            props: Object) => {
-  const key = props.date.format('YYYY-MM-DD');
-  const has = db && db.hasOwnProperty(key);
   let name = '';
-  let imgurl = '';
-  if (has) {
-    const menu = menuList[db[key].menuId];
+  let imgurl: string = '';
+  const key = props.date.format('YYYY-MM-DD');
+  const order = db[key];
+  if (order) {
+    const menu = menuList[order.menuId];
     if (menu) {
       name = menu.name;
-      imgurl = menu.gsimgurl;
+      imgurl = menu.gsimgurl || '';
     }
   }
   return (
