@@ -85,7 +85,7 @@ class MenuSelector extends Component<Props, State> {
     sortedMenuList.sort(this.getCompareFunc());
     let prevVendor = '';
     sortedMenuList.forEach((menu) => {
-      if (this.state.sortOrder == 'VendorName' &&
+      if (this.state.sortOrder === 'VendorName' &&
           prevVendor !== menu.vendor) {
         list.push(
             <GridListTile key={'v-' + menu.vendor}
