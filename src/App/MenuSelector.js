@@ -24,12 +24,14 @@ type SortOrder = 'Name' | 'VendorName' | 'Date' | 'DateRev';
 
 type State = {
   gridCols: number,
+  cellHeight: number,
   sortOrder: SortOrder,
 };
 
 class MenuSelector extends Component<Props, State> {
   state = {
     gridCols: 2,
+    cellHeight: 180,
     sortOrder: 'Name',
   }
 
@@ -75,6 +77,28 @@ class MenuSelector extends Component<Props, State> {
                  a.lastUpdate < b.lastUpdate ? -1 : 1;
         };
     }
+  }
+
+  handleResize() {
+    this.setState((prevState) => {
+      const elem = document.querySelector('#MenuSelector');
+      if (elem) {
+        const width = elem.clientWidth;// || document.documentElement.clientWidth;
+        console.log("width = " + width);
+        return {
+          gridCols: Math.ceil(width / prevState.cellHeight),
+        }
+      }
+    });
+  }
+
+  componentDidMount() {
+    this.handleResize();
+    window.addEventListener('resize', this.handleResize.bind(this));
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize.bind(this));
   }
 
   render() {
@@ -129,7 +153,7 @@ class MenuSelector extends Component<Props, State> {
       marginLeft: '1em',
     };
     return (
-        <div>
+        <div id='MenuSelector'>
           <div>
             <TextField
               select
@@ -144,7 +168,7 @@ class MenuSelector extends Component<Props, State> {
               <MenuItem value="Date">Last update date (new -> old)</MenuItem>
               <MenuItem value="DateRev">Last update date (old -> new)</MenuItem>
             </TextField>
-            <GridList cols={this.state.gridCols}>
+            <GridList cols={this.state.gridCols} cellHeight={this.state.cellHeight}>
               {
                 list.length > 0 ? list : <span>Loading...</span>
               }
