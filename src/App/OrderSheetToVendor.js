@@ -1,5 +1,6 @@
 // @flow
 import React, { Component } from 'react';
+import List, { ListItem, ListItemText } from 'material-ui/List';
 import moment from 'moment';
 import * as firebase from 'firebase';
 import Paper from 'material-ui/Paper';
@@ -108,14 +109,16 @@ class OrderSheetToVendor extends Component<Props, State> {
                       <h2>
                         {moment(date).format('ll')} - {type}
                       </h2>
-                      {
-                        Object.keys(db[vendor][date][type]).map((name) => (
-                          db[vendor][date][type][name] > 0 &&
-                          <div key={vendor + '-' + date + '-' + type + '-' + name}>
-                            {name} x {db[vendor][date][type][name]}
-                          </div>
-                        ))
-                      }
+                      <List>
+                        {
+                          Object.keys(db[vendor][date][type]).map((name) => (
+                            db[vendor][date][type][name] > 0 &&
+                            <ListItem key={vendor + '-' + date + '-' + type + '-' + name}>
+                              <ListItemText primary={name + " x " + db[vendor][date][type][name]} />
+                            </ListItem>
+                          ))
+                        }
+                      </List>
                     </Paper>
                   ))
                 ))
