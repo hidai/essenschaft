@@ -30,6 +30,7 @@ class MenuChooseDialog extends Component<Props> {
           <Dialog
             fullScreen={this.props.fullScreen}
             open={this.props.open}
+            onBackdropClick={this.props.handleClose}
           >
             <DialogTitle>
               Choose menu for {this.props.date.format('YYYY-MM-DD')}
