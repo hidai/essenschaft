@@ -6,9 +6,6 @@ import IconButton from 'material-ui/IconButton';
 import TextField from 'material-ui/TextField';
 import { MenuItem } from 'material-ui/Menu';
 import AddMenuButton from './AddMenuButton';
-import Button from 'material-ui/Button';
-import IconZoomIn from 'material-ui-icons/ZoomIn';
-import IconZoomOut from 'material-ui-icons/ZoomOut';
 import IconModeEdit from 'material-ui-icons/ModeEdit';
 import type { MenuType } from './MenuType';
 
@@ -33,14 +30,6 @@ class MenuSelector extends Component<Props, State> {
     gridCols: 2,
     cellHeight: 180,
     sortOrder: 'Name',
-  }
-
-  plusGridCols(diff: number) {
-    this.setState((prevState) => {
-      return {
-        gridCols: prevState.gridCols + diff
-      }
-    });
   }
 
   updateSortOrder(event: Object) {
@@ -168,7 +157,12 @@ class MenuSelector extends Component<Props, State> {
               <MenuItem value="Date">Last update date (new -> old)</MenuItem>
               <MenuItem value="DateRev">Last update date (old -> new)</MenuItem>
             </TextField>
-            <GridList cols={this.state.gridCols} cellHeight={this.state.cellHeight}>
+            <GridList
+              cols={this.state.gridCols}
+              cellHeight={this.state.cellHeight}
+              style={{
+              backgroundColor: 'white',
+            }}>
               {
                 list.length > 0 ? list : <span>Loading...</span>
               }
@@ -182,21 +176,6 @@ class MenuSelector extends Component<Props, State> {
                   fabStyle={fabStyle}
                   vendorList={this.props.vendorList} />
             }
-            <Button
-              fab
-              mini={true}
-              onClick={this.plusGridCols.bind(this, -1)}
-              disabled={this.state.gridCols === 1}
-              style={fabStyle}>
-              <IconZoomIn />
-            </Button>
-            <Button
-              fab
-              mini={true}
-              onClick={this.plusGridCols.bind(this, +1)}
-              style={fabStyle}>
-              <IconZoomOut />
-            </Button>
           </div>
         </div>
     )
