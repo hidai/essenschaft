@@ -29,7 +29,7 @@ class MenuSelector extends Component<Props, State> {
   state = {
     gridCols: 2,
     cellHeight: 180,
-    sortOrder: 'Name',
+    sortOrder: 'VendorName',
   }
 
   updateSortOrder(event: Object) {
@@ -104,7 +104,7 @@ class MenuSelector extends Component<Props, State> {
             <GridListTile key={'v-' + menu.vendor}
               cols={this.state.gridCols}
               style={{background: 'white', height: 'auto'}}>
-              <Subheader component="div">{menu.vendor}</Subheader>
+              <Subheader component="div"><h2>{menu.vendor}</h2></Subheader>
             </GridListTile>
         );
         prevVendor = menu.vendor;
