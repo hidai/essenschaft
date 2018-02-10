@@ -1,11 +1,15 @@
 // @flow
 import React, { Component } from 'react';
+import Grid from 'material-ui/Grid';
 import List, { ListItem, ListItemText } from 'material-ui/List';
 import moment from 'moment';
 import * as firebase from 'firebase';
 import Paper from 'material-ui/Paper';
 import type { OrderType } from './OrderType';
 import type { MenuType } from './MenuType';
+import DinnerIcon from 'material-ui-icons/Brightness2'
+import LunchIcon from 'material-ui-icons/Brightness5'
+import Divider from 'material-ui/Divider';
 
 type Props = {
   date: moment,
@@ -15,8 +19,8 @@ type Props = {
 type State = {
   db: {
     [vendor: string]: {
-      [date: moment]: {
-        [type: string]: {
+      [type: string]: {
+        [date: moment]: {
           [name: string]: number,
         },
       },
@@ -51,16 +55,16 @@ class OrderSheetToVendor extends Component<Props, State> {
           if (!newDb.hasOwnProperty(vendor)) {
             newDb[vendor] = {};
           }
-          if (!newDb[vendor].hasOwnProperty(date)) {
-            newDb[vendor][date] = {};
+          if (!newDb[vendor].hasOwnProperty(type)) {
+            newDb[vendor][type] = {};
           }
-          if (!newDb[vendor][date].hasOwnProperty(type)) {
-            newDb[vendor][date][type] = {};
+          if (!newDb[vendor][type].hasOwnProperty(date)) {
+            newDb[vendor][type][date] = {};
           }
-          if (!newDb[vendor][date][type].hasOwnProperty(name)) {
-            newDb[vendor][date][type][name] = 0;
+          if (!newDb[vendor][type][date].hasOwnProperty(name)) {
+            newDb[vendor][type][date][name] = 0;
           }
-          newDb[vendor][date][type][name]++;
+          newDb[vendor][type][date][name]++;
         });
         this.setState({
           db: newDb,
@@ -95,38 +99,67 @@ class OrderSheetToVendor extends Component<Props, State> {
   render() {
     const db = this.state.db;
     return (
-      <div>
+      <Grid container direction="column">
         {
           Object.keys(db).sort().map((vendor) => (
-            <div key={vendor}>
-              <h2>{vendor}</h2>
-              {
-                Object.keys(db[vendor]).sort().map((date) => (
-                  Object.keys(db[vendor][date]).sort().reverse().map((type) => (
-                    <Paper
-                      key={vendor + '-' + date + '-' + type}
-                      style={{marginBottom: "1em"}}>
-                      <h2>
-                        {moment(date).format('ll')} - {type}
-                      </h2>
-                      <List>
-                        {
-                          Object.keys(db[vendor][date][type]).map((name) => (
-                            db[vendor][date][type][name] > 0 &&
-                            <ListItem key={vendor + '-' + date + '-' + type + '-' + name}>
-                              <ListItemText primary={name + " x " + db[vendor][date][type][name]} />
-                            </ListItem>
-                          ))
-                        }
-                      </List>
-                    </Paper>
+            <Grid item key={vendor} style={{breakAfter: 'page'}}>
+              <Divider />
+              <h2 style={{textAlign: 'center'}}>{vendor}</h2>
+              <Grid container direction="column">
+                {
+                  Object.keys(db[vendor]).sort().reverse().map((type) => (
+                    <Grid container justify="center">
+                      {
+                        Object.keys(db[vendor][type]).sort().map((date) => (
+                          <Grid item>
+                            <Paper
+                              key={vendor + '-' + date + '-' + type}
+                              style={{
+                                marginBottom: '1em',
+                                padding: '0.1em 0.5em 0',
+                              }}>
+                              <h3>
+                                {
+                                  type === 'lunch'
+                                    ? <LunchIcon style={{color: 'gold', verticalAlign: 'bottom',}} />
+                                    : <DinnerIcon style={{color: 'darkgoldenrod', verticalAlign: 'bottom',}} />
+                                }
+                                {' '}
+                                {moment(date).format('M/DD ddd')}
+                              </h3>
+                              <List>
+                                {
+                                  Object.keys(db[vendor][type][date]).map((name) => (
+                                    db[vendor][type][date][name] > 0 &&
+                                    <ListItem key={vendor + '-' + date + '-' + type + '-' + name}>
+                                      <ListItemText primary={
+                                        <span>
+                                          {name}
+                                          <span style={{color: 'lightgray'}}> × </span>
+                                          <span style={{
+                                            color: db[vendor][type][date][name] > 1 ? 'black' : 'lightgray',
+                                            fontWeight: 'bold'
+                                          }}>
+                                            {db[vendor][type][date][name]}
+                                          </span>
+                                        </span>
+                                      } />
+                                    </ListItem>
+                                  ))
+                                }
+                              </List>
+                            </Paper>
+                          </Grid>
+                        ))
+                      }
+                    </Grid>
                   ))
-                ))
-              }
-            </div>
+                }
+              </Grid>
+            </Grid>
           ))
         }
-      </div>
+      </Grid>
     );
   }
 }
