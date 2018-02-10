@@ -45,7 +45,7 @@ class OrderSheetToVendorPage extends Component<Props, State> {
     }
     return (
         <div style={{marginTop: "5rem"}}>
-          <div style={{display: "flex", margin: "1em 0"}}>
+          <div style={{display: "flex", margin: "1em 0"}} className="noPrint">
             <TextField
               select
               value={this.state.weekId}

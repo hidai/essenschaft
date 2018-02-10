@@ -1,0 +1,8 @@
+@page { size: A4 }
+
+@media print {
+    .noPrint {
+        display: none !important;
+        height: 0;
+    }
+}

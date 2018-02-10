@@ -50,7 +50,7 @@ class UserPage extends Component<Props, State> {
     }
     return (
         <div>
-          <AppBar>
+          <AppBar className="noPrint">
             <Toolbar>
               <IconButton onClick={this.handleToggle} style={{color: "white"}}>
                 <MenuIcon />
