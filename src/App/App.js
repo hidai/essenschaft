@@ -56,9 +56,11 @@ class AppRouterBase extends Component<Props, State> {
           lastUpdate:    doc.data().lastUpdate,
           lastUpdatedBy: doc.data().lastUpdatedBy,
         };
-        setTimeout(() => {
-          this.loadCloudStorageUrl(doc.id, doc.data().name);
-        }, 1);
+        if (doc.data().imgurl) {
+          setTimeout(() => {
+            this.loadCloudStorageUrl(doc.id, doc.data().name);
+          }, 1);
+        }
       });
       this.setState({
         menuList: menuList
