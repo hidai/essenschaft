@@ -55,7 +55,7 @@ class UserPage extends Component<Props, State> {
               <IconButton onClick={this.handleToggle} style={{color: "white"}}>
                 <MenuIcon />
               </IconButton>
-              <Typography type="title" color="inherit">
+              <Typography variant="title" color="inherit">
                 <Switch>
                   <Route
                     path="/user/lunch"
@@ -78,7 +78,7 @@ class UserPage extends Component<Props, State> {
           </AppBar>
 
           <Drawer
-            type="temporary"
+            variant="temporary"
             open={this.state.open}
             onClose={this.handleToggle}
             ModalProps={{

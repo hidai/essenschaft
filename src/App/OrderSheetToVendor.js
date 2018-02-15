@@ -108,12 +108,11 @@ class OrderSheetToVendor extends Component<Props, State> {
               <Grid container direction="column">
                 {
                   Object.keys(db[vendor]).sort().reverse().map((type) => (
-                    <Grid container justify="center">
+                    <Grid container justify="center" key={vendor + '-' + type}>
                       {
                         Object.keys(db[vendor][type]).sort().map((date) => (
-                          <Grid item>
+                          <Grid item key={vendor + '-' + type + '-' + date}>
                             <Paper
-                              key={vendor + '-' + date + '-' + type}
                               style={{
                                 marginBottom: '1em',
                                 padding: '0.1em 0.5em 0',
@@ -131,7 +130,7 @@ class OrderSheetToVendor extends Component<Props, State> {
                                 {
                                   Object.keys(db[vendor][type][date]).map((name) => (
                                     db[vendor][type][date][name] > 0 &&
-                                    <ListItem key={vendor + '-' + date + '-' + type + '-' + name}>
+                                    <ListItem key={vendor + '-' + type + '-' + date + '-' + name}>
                                       <ListItemText primary={
                                         <span>
                                           {name}

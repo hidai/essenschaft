@@ -18,7 +18,7 @@ export default class SignOutButton extends Component<{}> {
     const signedIn = firebase.auth().currentUser != null;
     if (signedIn) {
       return (
-          <Button raised onClick={this.signout}>
+          <Button variant="raised" onClick={this.signout}>
             Sign out
           </Button>
       );

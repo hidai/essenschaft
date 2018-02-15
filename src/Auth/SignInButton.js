@@ -27,7 +27,7 @@ export default class SignInButton extends Component<{}> {
       };
       return (
           <Button
-            raised
+            variant="raised"
             style={{background: "white"}}
             onClick={this.handleGoogleLogin}>
             <img src={GoogleLogo} style={googleLogoStyle} alt="Google" />

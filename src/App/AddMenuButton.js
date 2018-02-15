@@ -43,8 +43,8 @@ class AddMenuButton extends Component<Props, State> {
             handleClose={this.handleClose.bind(this)}>
           </MenuEditDialog>
           <Button
-            fab
-            color="accent"
+            variant="fab"
+            color="secondary"
             style={this.props.fabStyle}
             onClick={this.handleOpen.bind(this)}>
             <IconAdd />
