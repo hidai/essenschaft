@@ -6,8 +6,11 @@ const bucket_name = process.env.GCLOUD_PROJECT + '.appspot.com';
 
 const func = (event) => {
   const menu = event.data.data();
+  if (!menu.imgurl) {
+    return;
+  }
   return req({
-             url: menu.imgurl,
+             uri: menu.imgurl,
              encoding: null,
              resolveWithFullResponse: true,
   }).then((response) => {
