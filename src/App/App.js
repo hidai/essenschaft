@@ -38,10 +38,8 @@ class AppRouterBase extends Component<Props, State> {
         user: user
       });
       if (user != null) {
-        console.log('Signed-in: ' + JSON.stringify(user));
         this.props.history.push('/user/lunch');
       } else {
-        console.log('Signed-out: ' + JSON.stringify(user));
         this.props.history.push('/');
       }
     });
@@ -83,7 +81,6 @@ class AppRouterBase extends Component<Props, State> {
   loadCloudStorageUrl(menuId: string, menuName: string) {
     firebase.storage().ref(menuId).getDownloadURL()
       .then((url) => {
-        console.info(`menuList[${menuId}].gsimgurl = "${url}"`);
         this.setState((prevState) => {
           const newMenuList = prevState.menuList;
           newMenuList[menuId].gsimgurl = url;

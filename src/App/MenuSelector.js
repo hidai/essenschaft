@@ -73,7 +73,6 @@ class MenuSelector extends Component<Props, State> {
       const elem = document.querySelector('#MenuSelector');
       if (elem) {
         const width = elem.clientWidth;// || document.documentElement.clientWidth;
-        console.log("width = " + width);
         return {
           gridCols: Math.ceil(width / prevState.cellHeight),
         }
